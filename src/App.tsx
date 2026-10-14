@@ -845,7 +845,7 @@ export default function App() {
           <PixelLab onExit={() => changeEdition("signal")} />
         )}
       </Suspense>
-      <nav className="edition-dock" aria-label="Choose portfolio design">
+      {edition !== "pixel" && <nav className="edition-dock" aria-label="Choose portfolio design">
         <span className="edition-label">Explore a different perspective</span>
         <div>
           {(["signal", "atlas", "pixel"] as const).map((e, i) => (
@@ -865,7 +865,7 @@ export default function App() {
             </button>
           ))}
         </div>
-      </nav>
+      </nav>}
       {search && (
         <SearchDialog
           onClose={() => setSearch(false)}

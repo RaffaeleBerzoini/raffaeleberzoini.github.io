@@ -1,0 +1,1710 @@
+.object-experience {
+  --ox-ink: #273d48;
+  --ox-paper: #eee3c6;
+  --ox-pixel-dark: #142532;
+  --ox-mint: #b8deb0;
+  --ox-screen: #15352e;
+  width: min(1120px, calc(100vw - 48px));
+  max-width: none;
+  max-height: 90svh;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
+  color: var(--ox-ink);
+  font:
+    14px/1.6 "IBM Plex Mono",
+    monospace;
+  color-scheme: light;
+  box-sizing: border-box;
+  overscroll-behavior: contain;
+}
+.object-experience::backdrop {
+  background: #091320d6;
+  backdrop-filter: blur(5px);
+}
+.object-experience[open] {
+  animation: ox-object-arrive 210ms steps(6, end) both;
+}
+.object-experience *,
+.object-experience *::before,
+.object-experience *::after {
+  box-sizing: border-box;
+}
+.object-experience h2,
+.object-experience h3,
+.object-experience h4,
+.object-experience p {
+  margin: 0;
+}
+.object-experience button,
+.object-experience a {
+  font: inherit;
+  border-radius: 0;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: #cf9b7540;
+}
+.object-experience button {
+  cursor: pointer;
+  border: 0;
+}
+dialog.object-experience button {
+  font-family: "Pixelify Sans", "IBM Plex Mono", monospace;
+}
+.object-experience h2,
+.object-experience h3,
+.object-experience h4,
+.object-experience button,
+.object-experience .ox-external,
+.object-experience .ox-computer-brand,
+.object-experience .ox-directory-label,
+.object-experience .ox-project-top,
+.object-experience .ox-terminal-footer,
+.object-experience .ox-computer-label,
+.object-experience .ox-book-running,
+.object-experience .ox-publication-venue,
+.object-experience .ox-book-footer,
+.object-experience .ox-note-meta,
+.object-experience .ox-note-organization,
+.object-experience .ox-board-footer,
+.object-experience .ox-letter-from,
+.object-experience .ox-letter-greeting,
+.object-experience .ox-letter-signoff,
+.object-experience .ox-envelope-front {
+  font-family: "Pixelify Sans", "IBM Plex Mono", monospace;
+}
+.object-experience a {
+  color: inherit;
+  text-decoration: none;
+}
+.object-experience button:focus-visible,
+.object-experience a:focus-visible {
+  outline: 3px solid #eeae6c;
+  outline-offset: 4px;
+}
+.object-experience button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+.object-experience .ox-pixel-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+.object-experience .ox-icon-cutout {
+  fill: var(--ox-icon-bg, var(--ox-screen));
+}
+.object-experience .ox-close {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: #c87965;
+  color: #fff0cf;
+  border: 3px solid #8e534b;
+  box-shadow:
+    inset 3px 3px 0 #e2a081,
+    inset -3px -3px 0 #a25e51,
+    3px 3px 0 #17293770;
+}
+.object-experience .ox-close:hover {
+  background: #dc947a;
+  transform: translate(-1px, -1px);
+}
+.object-experience .ox-close:active {
+  transform: translate(1px, 1px);
+  box-shadow: inset 3px 3px 0 #a25e51;
+}
+.object-experience .ox-external {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 44px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.object-experience .ox-external > span[aria-hidden="true"] {
+  margin-left: auto;
+  font-size: 20px;
+}
+.object-experience .ox-external:hover {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+.object-experience .ox-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.object-experience .ox-stepper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.object-experience .ox-stepper button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  min-width: 74px;
+  min-height: 44px;
+  padding: 4px 7px;
+  background: transparent;
+  color: inherit;
+  font-size: 12px;
+}
+.object-experience .ox-stepper button:hover {
+  background: #ffffff16;
+}
+.object-experience .ox-stepper button:active {
+  transform: translateY(2px);
+}
+.object-experience .ox-stepper > span {
+  font-size: 12px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.object-experience .ox-step-divider {
+  opacity: 0.55;
+  margin: 0 5px;
+}
+
+/* The terminal is inside a physical, bevelled CRT case. */
+.object-experience .ox-computer {
+  height: min(730px, 90svh);
+  display: flex;
+  flex-direction: column;
+  filter: drop-shadow(12px 12px 0 #070f1a80);
+}
+.object-experience .ox-crt-case {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: #c6c6ac;
+  border: 6px solid #8c998a;
+  border-top-color: #e5dfc5;
+  border-left-color: #dedac2;
+  padding: 15px 22px 0;
+  box-shadow:
+    inset 6px 6px 0 #d7d5bb,
+    inset -7px -7px 0 #a4af9d;
+}
+.object-experience .ox-computer-brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 0 15px 6px;
+  color: #52665f;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+.object-experience .ox-computer-brand > span {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.object-experience .ox-brand-square {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border: 4px solid #55776e;
+  box-shadow: 3px 3px 0 #acb59e;
+}
+.object-experience .ox-case-model {
+  color: #57685e;
+  font-size: 9px;
+}
+.object-experience .ox-crt-bezel {
+  flex: 1;
+  min-height: 0;
+  padding: 10px;
+  border: 8px solid #798d7e;
+  border-right-color: #e1dcc0;
+  border-bottom-color: #e1dcc0;
+  background: #1c352c;
+  box-shadow: 0 0 0 3px #afb9a4;
+}
+.object-experience .ox-crt-screen {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--ox-screen);
+  color: var(--ox-mint);
+  border: 2px solid #295b46;
+  color-scheme: dark;
+}
+.object-experience .ox-crt-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.15;
+  background: repeating-linear-gradient(
+    0deg,
+    #001b0d 0,
+    #001b0d 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  z-index: 3;
+}
+.object-experience .ox-terminal-title {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 15px 20px;
+  border-bottom: 2px solid #4c775747;
+  background: #1c4034;
+  flex-shrink: 0;
+}
+.object-experience .ox-terminal-title .ox-pixel-icon {
+  width: 23px;
+  height: 23px;
+}
+.object-experience .ox-terminal-title h2 {
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.object-experience .ox-terminal-cursor {
+  margin-left: auto;
+  color: #d9cf95;
+  animation: ox-terminal-blink 1.6s steps(1, end) infinite;
+}
+.object-experience .ox-terminal-workspace {
+  display: grid;
+  grid-template-columns: 245px minmax(0, 1fr);
+  flex: 1;
+  min-height: 0;
+}
+.object-experience .ox-directory {
+  padding: 24px 12px 18px;
+  border-right: 2px solid #4c775747;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #5e825b transparent;
+  display: flex;
+  flex-direction: column;
+}
+.object-experience .ox-directory-label {
+  padding: 0 10px 17px;
+  color: #96bd93;
+  font-size: 11px;
+}
+.object-experience .ox-directory > button {
+  display: flex;
+  align-items: flex-start;
+  text-align: left;
+  gap: 10px;
+  background: transparent;
+  color: #c0d9ad;
+  padding: 13px 9px;
+  min-height: 50px;
+  font-size: 13px;
+  line-height: 1.55;
+  border: 1px solid transparent;
+  margin-bottom: 5px;
+}
+.object-experience .ox-directory > button:hover {
+  border-color: #72956c;
+}
+.object-experience .ox-directory > button.ox-file-active {
+  background: #b6cea0;
+  color: #1c392c;
+  border-color: #d5e3b5;
+}
+.object-experience .ox-file-number {
+  font-size: 10px;
+  padding-top: 3px;
+  opacity: 0.8;
+  flex-shrink: 0;
+}
+.object-experience .ox-file-marker {
+  margin-left: auto;
+  font-size: 9px;
+  padding-top: 4px;
+  min-width: 8px;
+}
+.object-experience .ox-directory-github {
+  padding: 12px 10px 0;
+  margin-top: auto;
+  font-size: 11px;
+  color: #b4d29c;
+}
+.object-experience .ox-project-details {
+  padding: 25px 30px 28px;
+  overflow: auto;
+  min-width: 0;
+  scrollbar-width: thin;
+  scrollbar-color: #5e825b transparent;
+  animation: ox-content-arrive 150ms steps(3, end) both;
+}
+.object-experience .ox-project-top {
+  display: flex;
+  gap: 15px;
+  justify-content: space-between;
+  color: #9ac095;
+  font-size: 11px;
+}
+.object-experience .ox-project-hero {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  padding: 28px 0 22px;
+}
+.object-experience .ox-project-hero > .ox-pixel-icon {
+  width: 64px;
+  height: 64px;
+  color: #d4dea7;
+}
+.object-experience .ox-project-hero h3 {
+  font-size: clamp(24px, 3vw, 35px);
+  line-height: 1.2;
+  letter-spacing: -1.5px;
+  font-weight: 500;
+  color: #e0e9b8;
+}
+.object-experience .ox-project-description {
+  font-size: 15px;
+  line-height: 1.85;
+  color: #bed4ac;
+  max-width: 57ch;
+}
+.object-experience .ox-project-tools {
+  padding: 23px 0 20px;
+}
+.object-experience .ox-project-tools h4 {
+  font-size: 10px;
+  font-weight: 400;
+  margin-bottom: 10px;
+  color: #9bbd91;
+}
+.object-experience .ox-project-tools ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.object-experience .ox-project-tools li {
+  border: 1px solid #75976c;
+  padding: 4px 8px;
+  font-size: 11px;
+  color: #bfd4a7;
+}
+.object-experience .ox-project-launch {
+  width: 100%;
+  padding: 10px 13px;
+  margin-top: 8px;
+  background: #b6cea0;
+  color: #15382c;
+  box-shadow: 4px 4px 0 #071f1a;
+}
+.object-experience .ox-project-launch:hover {
+  background: #d0dfa9;
+}
+.object-experience .ox-project-launch > span[aria-hidden="true"]:first-of-type {
+  margin-left: auto;
+  font-size: 9px;
+  letter-spacing: 0.5px;
+}
+.object-experience
+  .ox-project-launch
+  > span[aria-hidden="true"]:nth-of-type(2) {
+  margin-left: 0;
+}
+.object-experience .ox-terminal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 55px;
+  flex-shrink: 0;
+  padding: 5px 18px;
+  border-top: 2px solid #4c775747;
+  background: #1c4034;
+}
+.object-experience .ox-terminal-hint {
+  font-size: 10px;
+  color: #a6c69a;
+}
+.object-experience .ox-computer-bottom {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 7px 20px;
+  flex-shrink: 0;
+}
+.object-experience .ox-computer-vents {
+  width: 132px;
+  height: 15px;
+  background: repeating-linear-gradient(
+    90deg,
+    #778b7d 0,
+    #778b7d 5px,
+    transparent 5px,
+    transparent 10px
+  );
+}
+.object-experience .ox-computer-label {
+  margin-left: auto;
+  font-size: 10px;
+  color: #526a61;
+  letter-spacing: 0.6px;
+}
+.object-experience .ox-computer-power {
+  width: 12px;
+  height: 12px;
+  background: #83a97c;
+  border: 3px solid #5f7e60;
+  box-shadow: 0 0 0 4px #afb8a1;
+}
+.object-experience .ox-computer-neck {
+  width: 29%;
+  height: 20px;
+  background: #849b8c;
+  margin: 0 auto;
+  border-left: 7px solid #b3bca3;
+  border-right: 7px solid #6c867b;
+  flex-shrink: 0;
+}
+.object-experience .ox-computer-foot {
+  width: 47%;
+  height: 18px;
+  background: #bcc7ae;
+  border: 5px solid #d3d3b8;
+  border-right-color: #84998b;
+  border-bottom-color: #84998b;
+  margin: 0 auto;
+  flex-shrink: 0;
+}
+
+/* Each publication occupies the two pages of the same open book. */
+.object-experience.ox-experience-research {
+  width: min(1060px, calc(100vw - 48px));
+}
+.object-experience .ox-research-object {
+  display: flex;
+  flex-direction: column;
+  height: min(720px, 90svh);
+  filter: drop-shadow(12px 12px 0 #070f1a80);
+}
+.object-experience .ox-book-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  color: #e6d8b8;
+  margin-bottom: 14px;
+}
+.object-experience .ox-book-top h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 23px;
+  font-weight: 400;
+}
+.object-experience .ox-book-top .ox-pixel-icon {
+  --ox-icon-bg: #172c37;
+  width: 28px;
+  height: 28px;
+}
+.object-experience .ox-bookmarks {
+  display: flex;
+  padding: 0 25px;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.object-experience .ox-bookmark {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 11px 16px 18px;
+  margin-bottom: -7px;
+  min-height: 55px;
+  color: #f6e8c4;
+  border: 3px solid #a7b595;
+  border-bottom: 0;
+  background: #617c70;
+  transform: translateY(6px);
+  box-shadow: inset 4px 0 0 #ffffff1f;
+  transition: transform 120ms steps(2, end);
+}
+.object-experience .ox-bookmark-1 {
+  background: #aa7162;
+  border-color: #dca789;
+}
+.object-experience .ox-bookmark-2 {
+  background: #5f7d8d;
+  border-color: #a0b4b6;
+}
+.object-experience .ox-bookmark-3 {
+  background: #8c7d58;
+  border-color: #c9b789;
+}
+.object-experience .ox-bookmark small {
+  font-size: 10px;
+}
+.object-experience .ox-bookmark:hover,
+.object-experience .ox-bookmark-selected {
+  transform: translateY(0);
+  color: #fff7dc;
+}
+.object-experience .ox-bookmark-selected {
+  box-shadow:
+    inset 4px 0 0 #ffffff40,
+    inset 0 3px 0 #f0e3b7;
+}
+.object-experience .ox-open-book {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  padding: 0;
+  border: 12px solid #4c685f;
+  border-left-color: #738b70;
+  border-top-color: #91a180;
+  border-bottom-width: 9px;
+  background: var(--ox-paper);
+  color: #3b4b45;
+  box-shadow: inset 0 0 0 2px #b8aa85;
+  z-index: 1;
+}
+.object-experience .ox-book-pages {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 0;
+  flex: 1;
+  animation: ox-page-turn 180ms steps(4, end) both;
+}
+.object-experience .ox-book-page {
+  position: relative;
+  overflow: auto;
+  min-width: 0;
+  padding: 27px 36px 45px;
+  scrollbar-width: thin;
+  scrollbar-color: #a5b09a transparent;
+}
+.object-experience .ox-book-left {
+  background: #f0e5c9;
+  box-shadow:
+    inset -18px 0 0 #dcd3b520,
+    inset -5px 0 0 #b9ae8d40;
+}
+.object-experience .ox-book-right {
+  background: #ebdfc0;
+  box-shadow:
+    inset 10px 0 0 #cbbd9820,
+    inset 4px 0 0 #b9ae8d40;
+}
+.object-experience .ox-book-running {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #aaa58e;
+  color: #65715f;
+  font-size: 10px;
+}
+.object-experience .ox-book-ornament {
+  display: grid;
+  place-items: center;
+  margin: 24px auto 18px;
+  width: 68px;
+  height: 68px;
+  border: 3px solid #81917b;
+  color: #637d65;
+  box-shadow: 5px 5px 0 #c5c5a6;
+}
+.object-experience .ox-book-ornament .ox-pixel-icon {
+  width: 38px;
+  height: 38px;
+  --ox-icon-bg: #f0e5c9;
+}
+.object-experience .ox-publication-venue {
+  color: #63715d;
+  font-size: 11px;
+  line-height: 1.6;
+  margin: 0 0 14px;
+  text-align: center;
+}
+.object-experience .ox-book-left h3 {
+  font-size: clamp(19px, 2.2vw, 27px);
+  line-height: 1.45;
+  letter-spacing: -1px;
+  text-align: center;
+  font-weight: 500;
+  color: #344b41;
+}
+.object-experience .ox-book-topic-list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 7px 14px;
+  margin-top: 23px;
+  font-size: 10px;
+  line-height: 1.7;
+  color: #5a725f;
+}
+.object-experience .ox-book-topic-list span + span::before {
+  content: "·";
+  margin-right: 12px;
+}
+.object-experience .ox-book-page-number {
+  display: block;
+  margin-top: 28px;
+  font-size: 10px;
+  color: #62735e;
+  text-align: center;
+}
+.object-experience .ox-book-right h4 {
+  color: #425a47;
+  font-size: 12px;
+  font-weight: 500;
+  margin: 22px 0 9px;
+}
+.object-experience .ox-book-abstract {
+  font-size: 15px;
+  line-height: 1.9;
+  color: #405544;
+}
+.object-experience .ox-book-authors {
+  font-size: 13px;
+  line-height: 1.85;
+  color: #4e624f;
+}
+.object-experience .ox-book-reference p {
+  font-size: 12px;
+  color: #52654f;
+  overflow-wrap: anywhere;
+}
+.object-experience .ox-book-read {
+  width: 100%;
+  padding: 12px 0;
+  margin-top: 14px;
+  border-top: 2px solid #97a086;
+  color: #3b5c42;
+  font-size: 12px;
+}
+.object-experience .ox-book-binding {
+  position: absolute;
+  left: calc(50% - 2px);
+  width: 4px;
+  top: 0;
+  bottom: 58px;
+  background: #9d9e7c;
+  opacity: 0.5;
+  pointer-events: none;
+}
+.object-experience .ox-book-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;
+  min-height: 58px;
+  padding: 6px 24px;
+  border-top: 1px solid #b5b396;
+  background: #e3d8b9;
+}
+.object-experience .ox-book-footer > span {
+  font-size: 10px;
+  color: #52664e;
+}
+.object-experience .ox-book-footer .ox-stepper button:hover {
+  background: #b5b89a50;
+}
+.object-experience .ox-book-page-edges {
+  height: 12px;
+  border-left: 12px solid #4c685f;
+  border-right: 12px solid #4c685f;
+  border-bottom: 4px solid #4c685f;
+  margin: 0 8px;
+  background: repeating-linear-gradient(
+    0deg,
+    #b6aa88 0,
+    #b6aa88 2px,
+    #e0d4b4 2px,
+    #e0d4b4 4px
+  );
+}
+
+/* The journey lives on pinned paper, not a conventional profile page. */
+.object-experience.ox-experience-profile {
+  width: min(1030px, calc(100vw - 48px));
+}
+.object-experience .ox-corkboard {
+  height: min(710px, 90svh);
+  display: flex;
+  flex-direction: column;
+  border: 13px solid #b28a68;
+  border-top-color: #e0b58a;
+  border-left-color: #d3a67d;
+  padding: 23px 26px 17px;
+  background-color: #8c6853;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      #a37e5f33 0,
+      #a37e5f33 3px,
+      transparent 3px,
+      transparent 8px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      #674a4330 0,
+      #674a4330 3px,
+      transparent 3px,
+      transparent 11px
+    );
+  box-shadow:
+    inset 4px 4px 0 #4e3f3b70,
+    12px 12px 0 #070f1a80;
+}
+.object-experience .ox-board-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 0 25px;
+  flex-shrink: 0;
+}
+.object-experience .ox-board-title-tape {
+  position: relative;
+  background: #d6d4b2;
+  padding: 9px 22px;
+  box-shadow: 4px 4px 0 #503a3640;
+  transform: rotate(-1deg);
+}
+.object-experience .ox-board-title-tape h2 {
+  font-size: 24px;
+  color: #4c5b4c;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.object-experience .ox-board-title-tape p {
+  font-size: 10px;
+  color: #65715d;
+  padding-top: 3px;
+}
+.object-experience .ox-board-body {
+  min-height: 0;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 36px;
+}
+.object-experience .ox-pinned-notes {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  padding: 4px 5px 12px;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #d4b087 transparent;
+}
+.object-experience .ox-small-note {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding: 23px 18px 13px;
+  background: #c7d6b4;
+  color: #3e5948;
+  transform: rotate(-2deg);
+  box-shadow: 4px 5px 0 #513b3d70;
+  border: 2px solid transparent;
+}
+.object-experience .ox-small-note-1 {
+  background: #d6ae93;
+  color: #624c41;
+  transform: rotate(2deg);
+}
+.object-experience .ox-small-note-2 {
+  background: #bbccd1;
+  color: #3c5660;
+  transform: rotate(-1deg);
+}
+.object-experience .ox-small-note-3 {
+  background: #e0cf95;
+  color: #5c5839;
+  transform: rotate(1deg);
+}
+.object-experience .ox-small-note:hover {
+  transform: rotate(0);
+  border-color: #f2e2bb;
+}
+.object-experience .ox-small-note-selected {
+  transform: rotate(0);
+  border-color: #f9ecd0;
+  box-shadow: 5px 5px 0 #49393b90;
+}
+.object-experience .ox-small-note small {
+  font-size: 10px;
+  margin-bottom: 5px;
+}
+.object-experience .ox-small-note strong {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+.object-experience .ox-small-note > span:not(.ox-note-pin) {
+  font-size: 9px;
+  margin-top: 10px;
+  opacity: 0.8;
+}
+.object-experience .ox-note-pin {
+  position: absolute;
+  top: 8px;
+  left: calc(50% - 5px);
+  width: 10px;
+  height: 10px;
+  background: #ae5f50;
+  border: 2px solid #e5a07e;
+  box-shadow: 3px 3px 0 #61483f90;
+}
+.object-experience .ox-large-note {
+  position: relative;
+  padding: 38px 35px 27px;
+  background: #ece3c8;
+  min-width: 0;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #abb6a0 transparent;
+  box-shadow: 7px 8px 0 #49393b60;
+  transform: rotate(0.5deg);
+  animation: ox-note-arrive 180ms steps(4, end) both;
+}
+.object-experience .ox-large-note > .ox-note-pin {
+  top: 13px;
+  width: 13px;
+  height: 13px;
+}
+.object-experience .ox-note-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 15px;
+  justify-content: space-between;
+  color: #677363;
+  font-size: 10px;
+}
+.object-experience .ox-large-note h3 {
+  font-size: clamp(25px, 3vw, 35px);
+  color: #3a5148;
+  line-height: 1.3;
+  letter-spacing: -1.6px;
+  margin-top: 26px;
+  font-weight: 500;
+}
+.object-experience .ox-note-organization {
+  font-size: 13px;
+  color: #70816d;
+  margin-top: 10px;
+}
+.object-experience .ox-note-rule {
+  height: 3px;
+  width: 46px;
+  background: #b17d64;
+  margin: 22px 0;
+}
+.object-experience .ox-note-description {
+  font-size: 15px;
+  line-height: 1.95;
+  color: #485e50;
+}
+.object-experience .ox-note-source {
+  margin: 18px 0 8px;
+  color: #3e6b56;
+  border-bottom: 1px solid #a2ae91;
+  min-width: 200px;
+}
+.object-experience .ox-note-signature {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding-top: 25px;
+  color: #71826c;
+}
+.object-experience .ox-note-signature > span {
+  font-size: 33px;
+  font-weight: 500;
+  letter-spacing: -5px;
+  color: #668171;
+}
+.object-experience .ox-note-signature p {
+  font-size: 10px;
+  line-height: 1.7;
+}
+.object-experience .ox-board-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 22px;
+  padding-top: 20px;
+  flex-shrink: 0;
+  color: #fff0cf;
+}
+.object-experience .ox-board-footer > p {
+  max-width: 48ch;
+  font-size: 10px;
+  line-height: 1.6;
+  color: #f0dfbd;
+}
+.object-experience .ox-board-footer .ox-stepper {
+  gap: 6px;
+}
+.object-experience .ox-board-footer .ox-stepper button {
+  min-width: 65px;
+}
+
+/* Open stationery sits inside a blocky airmail envelope. */
+.object-experience.ox-experience-contact {
+  width: min(760px, calc(100vw - 48px));
+}
+.object-experience .ox-mail-object {
+  position: relative;
+  height: min(760px, 90svh);
+  padding: 38px 35px 68px;
+  display: flex;
+  flex-direction: column;
+  filter: drop-shadow(12px 12px 0 #070f1a80);
+}
+.object-experience .ox-envelope-back {
+  position: absolute;
+  inset: 0 0 0;
+  background: #b89d78;
+  clip-path: polygon(
+    0 23%,
+    10% 23%,
+    10% 18%,
+    20% 18%,
+    20% 13%,
+    30% 13%,
+    30% 8%,
+    40% 8%,
+    40% 3%,
+    60% 3%,
+    60% 8%,
+    70% 8%,
+    70% 13%,
+    80% 13%,
+    80% 18%,
+    90% 18%,
+    90% 23%,
+    100% 23%,
+    100% 100%,
+    0 100%
+  );
+  box-shadow: inset 0 -10px 0 #987b61;
+}
+.object-experience .ox-letter {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: #f0e5cd;
+  color: #455952;
+  border: 5px solid #ddcfac;
+  border-left-color: #fff0d1;
+  border-top-color: #fff0d1;
+  box-shadow: 6px 6px 0 #8a786050;
+  transform: rotate(-0.6deg);
+}
+.object-experience .ox-letter-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 24px 25px 20px;
+  border-top: 8px solid transparent;
+  border-image: repeating-linear-gradient(
+      135deg,
+      #a77467 0,
+      #a77467 10px,
+      #efdebf 10px,
+      #efdebf 20px,
+      #789590 20px,
+      #789590 30px,
+      #efdebf 30px,
+      #efdebf 40px
+    )
+    8;
+  flex-shrink: 0;
+}
+.object-experience .ox-letter-from {
+  font-size: 10px;
+  color: #71806d;
+  line-height: 1.7;
+}
+.object-experience .ox-letter-from strong {
+  font-size: 12px;
+  color: #4e6659;
+  font-weight: 500;
+}
+.object-experience .ox-letter-stamp {
+  margin-left: auto;
+  color: #59766a;
+  border: 3px dashed #c4c9a9;
+  background: #dbe1c6;
+  padding: 7px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transform: rotate(6deg);
+}
+.object-experience .ox-letter-stamp .ox-pixel-icon {
+  width: 25px;
+  height: 25px;
+  --ox-icon-bg: #dbe1c6;
+}
+.object-experience .ox-letter-stamp span {
+  font-size: 8px;
+  letter-spacing: 2px;
+}
+.object-experience .ox-letter-content {
+  padding: 0 35px 27px;
+  overflow: auto;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: #a5b59e transparent;
+}
+.object-experience .ox-letter-greeting {
+  font-size: 11px;
+  color: #6a7965;
+  margin: 4px 0 15px;
+}
+.object-experience .ox-letter-content h2 {
+  font-size: clamp(25px, 3.5vw, 34px);
+  line-height: 1.35;
+  letter-spacing: -1.6px;
+  color: #3b574a;
+  font-weight: 500;
+}
+.object-experience .ox-letter-intro {
+  font-size: 14px;
+  line-height: 1.85;
+  color: #576b59;
+  margin-top: 17px;
+  max-width: 50ch;
+}
+.object-experience .ox-letter-links {
+  margin-top: 22px;
+  border-top: 1px solid #b8bba0;
+}
+.object-experience .ox-letter-links > a {
+  display: flex;
+  width: 100%;
+  padding: 14px 0;
+  gap: 18px;
+  border-bottom: 1px solid #b8bba0;
+}
+.object-experience .ox-letter-links .ox-pixel-icon {
+  color: #78907b;
+  width: 27px;
+  height: 27px;
+  --ox-icon-bg: #f0e5cd;
+}
+.object-experience .ox-letter-links strong {
+  font-size: 15px;
+  color: #3e5c4c;
+  font-weight: 500;
+}
+.object-experience .ox-letter-links small {
+  display: block;
+  font-size: 10px;
+  line-height: 1.65;
+  color: #667963;
+  margin-top: 4px;
+  font-weight: 400;
+}
+.object-experience .ox-letter-links > a > span[aria-hidden="true"] {
+  color: #71866e;
+}
+.object-experience .ox-letter-signoff {
+  padding-top: 25px;
+  font-size: 11px;
+  color: #6d7c66;
+}
+.object-experience .ox-letter-signoff > span {
+  display: block;
+}
+.object-experience .ox-letter-signoff strong {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 5px;
+  font-size: 23px;
+  font-weight: 500;
+  letter-spacing: -1px;
+  color: #476752;
+}
+.object-experience .ox-letter-signoff strong span {
+  color: #bc8166;
+  font-size: 20px;
+}
+.object-experience .ox-envelope-front {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 90px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 18px;
+  background: #ccb18a;
+  border: 5px solid #dec39b;
+  border-bottom-color: #a78b6b;
+  border-right-color: #a78b6b;
+  clip-path: polygon(
+    0 0,
+    8% 0,
+    8% 12%,
+    18% 12%,
+    18% 24%,
+    28% 24%,
+    28% 35%,
+    72% 35%,
+    72% 24%,
+    82% 24%,
+    82% 12%,
+    92% 12%,
+    92% 0,
+    100% 0,
+    100% 100%,
+    0 100%
+  );
+  pointer-events: none;
+}
+.object-experience .ox-envelope-front span {
+  color: #6b6250;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+@keyframes ox-object-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(13px) scale(0.965);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes ox-content-arrive {
+  from {
+    opacity: 0.35;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes ox-terminal-blink {
+  0%,
+  54%,
+  100% {
+    opacity: 1;
+  }
+  55%,
+  99% {
+    opacity: 0;
+  }
+}
+@keyframes ox-page-turn {
+  from {
+    opacity: 0.5;
+    transform: scaleX(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+@keyframes ox-note-arrive {
+  from {
+    opacity: 0.5;
+    transform: rotate(-1deg) translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0.5deg) translateY(0);
+  }
+}
+
+@media (max-width: 900px) {
+  .object-experience .ox-terminal-workspace {
+    grid-template-columns: 200px minmax(0, 1fr);
+  }
+  .object-experience .ox-project-details {
+    padding: 22px;
+  }
+  .object-experience .ox-project-hero {
+    gap: 18px;
+  }
+  .object-experience .ox-project-hero > .ox-pixel-icon {
+    width: 48px;
+    height: 48px;
+  }
+  .object-experience .ox-directory > button {
+    font-size: 12px;
+  }
+  .object-experience .ox-book-page {
+    padding: 23px 25px 30px;
+  }
+  .object-experience .ox-bookmark {
+    gap: 10px;
+    padding: 11px 13px 18px;
+    font-size: 12px;
+  }
+  .object-experience .ox-board-body {
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 23px;
+  }
+  .object-experience .ox-large-note {
+    padding: 35px 25px 23px;
+  }
+  .object-experience .ox-corkboard {
+    padding: 19px 20px 16px;
+  }
+}
+@media (max-width: 650px) {
+  .object-experience,
+  .object-experience.ox-experience-research,
+  .object-experience.ox-experience-profile,
+  .object-experience.ox-experience-contact {
+    width: calc(100vw - 22px);
+    max-height: 92svh;
+  }
+  .object-experience .ox-computer {
+    height: 90svh;
+  }
+  .object-experience .ox-crt-case {
+    padding: 9px 9px 0;
+    border-width: 4px;
+    box-shadow:
+      inset 3px 3px 0 #d7d5bb,
+      inset -4px -4px 0 #a4af9d;
+  }
+  .object-experience .ox-computer-brand {
+    padding: 0 0 10px 5px;
+    font-size: 9px;
+    letter-spacing: 0.3px;
+  }
+  .object-experience .ox-case-model {
+    display: none;
+  }
+  .object-experience .ox-brand-square {
+    width: 12px;
+    height: 12px;
+    border-width: 3px;
+  }
+  .object-experience .ox-crt-bezel {
+    padding: 4px;
+    border-width: 5px;
+  }
+  .object-experience .ox-terminal-title {
+    padding: 12px 13px;
+    gap: 9px;
+  }
+  .object-experience .ox-terminal-title h2 {
+    font-size: 18px;
+  }
+  .object-experience .ox-terminal-workspace {
+    display: flex;
+    flex-direction: column;
+  }
+  .object-experience .ox-directory {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    flex-shrink: 0;
+    gap: 4px;
+    padding: 8px;
+    overflow: visible;
+    border-right: 0;
+    border-bottom: 2px solid #4c775747;
+  }
+  .object-experience .ox-directory-label,
+  .object-experience .ox-directory-github {
+    display: none;
+  }
+  .object-experience .ox-directory > button {
+    align-items: center;
+    min-height: 44px;
+    padding: 6px 8px;
+    font-size: 10px;
+    gap: 6px;
+    margin: 0;
+    line-height: 1.5;
+  }
+  .object-experience .ox-file-number {
+    font-size: 8px;
+    padding: 0;
+  }
+  .object-experience .ox-file-marker {
+    display: none;
+  }
+  .object-experience .ox-project-details {
+    flex: 1;
+    min-height: 0;
+    padding: 18px 16px 24px;
+  }
+  .object-experience .ox-project-top {
+    font-size: 10px;
+  }
+  .object-experience .ox-project-hero {
+    padding: 22px 0 18px;
+    gap: 15px;
+  }
+  .object-experience .ox-project-hero > .ox-pixel-icon {
+    width: 42px;
+    height: 42px;
+  }
+  .object-experience .ox-project-hero h3 {
+    font-size: 23px;
+    letter-spacing: -1.2px;
+  }
+  .object-experience .ox-project-description {
+    font-size: 14px;
+    line-height: 1.85;
+  }
+  .object-experience .ox-project-tools {
+    padding-top: 20px;
+  }
+  .object-experience .ox-project-launch {
+    font-size: 12px;
+  }
+  .object-experience
+    .ox-project-launch
+    > span[aria-hidden="true"]:first-of-type {
+    display: none;
+  }
+  .object-experience .ox-terminal-footer {
+    justify-content: center;
+    padding: 3px 8px;
+    min-height: 50px;
+  }
+  .object-experience .ox-terminal-hint {
+    display: none;
+  }
+  .object-experience .ox-terminal-footer .ox-stepper {
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .object-experience .ox-computer-bottom {
+    padding: 14px 8px 15px;
+    gap: 10px;
+  }
+  .object-experience .ox-computer-vents {
+    width: 70px;
+    height: 12px;
+  }
+  .object-experience .ox-computer-label {
+    font-size: 8px;
+  }
+  .object-experience .ox-computer-neck {
+    height: 13px;
+  }
+  .object-experience .ox-computer-foot {
+    height: 14px;
+  }
+  .object-experience .ox-research-object {
+    height: 90svh;
+  }
+  .object-experience .ox-book-top {
+    margin-bottom: 11px;
+    padding: 0 3px;
+    gap: 12px;
+  }
+  .object-experience .ox-book-top h2 {
+    font-size: 19px;
+    gap: 9px;
+  }
+  .object-experience .ox-book-top .ox-pixel-icon {
+    width: 23px;
+    height: 23px;
+  }
+  .object-experience .ox-bookmarks {
+    gap: 6px;
+    padding: 0 10px;
+  }
+  .object-experience .ox-bookmark {
+    flex: 1;
+    flex-direction: column;
+    gap: 3px;
+    padding: 8px 7px 17px;
+    font-size: 10px;
+    min-width: 0;
+    align-items: center;
+  }
+  .object-experience .ox-bookmark small {
+    font-size: 8px;
+  }
+  .object-experience .ox-open-book {
+    border-width: 8px;
+  }
+  .object-experience .ox-book-pages {
+    display: block;
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #a5b09a transparent;
+  }
+  .object-experience .ox-book-page {
+    overflow: visible;
+    padding: 22px 24px 25px;
+  }
+  .object-experience .ox-book-left {
+    border-bottom: 2px solid #b5af8d;
+    box-shadow: none;
+  }
+  .object-experience .ox-book-right {
+    box-shadow: none;
+  }
+  .object-experience .ox-book-running {
+    font-size: 9px;
+  }
+  .object-experience .ox-book-ornament {
+    margin: 20px auto 18px;
+    width: 55px;
+    height: 55px;
+  }
+  .object-experience .ox-book-ornament .ox-pixel-icon {
+    width: 30px;
+    height: 30px;
+  }
+  .object-experience .ox-book-left h3 {
+    font-size: 22px;
+  }
+  .object-experience .ox-book-abstract {
+    font-size: 14px;
+  }
+  .object-experience .ox-book-authors {
+    font-size: 13px;
+  }
+  .object-experience .ox-book-binding {
+    display: none;
+  }
+  .object-experience .ox-book-footer {
+    padding: 4px 9px;
+    justify-content: center;
+    min-height: 54px;
+  }
+  .object-experience .ox-book-footer > span {
+    display: none;
+  }
+  .object-experience .ox-book-footer .ox-stepper {
+    width: 100%;
+    justify-content: space-between;
+    gap: 7px;
+  }
+  .object-experience .ox-corkboard {
+    height: 90svh;
+    padding: 15px 13px 11px;
+    border-width: 8px;
+  }
+  .object-experience .ox-board-header {
+    padding-bottom: 17px;
+    gap: 11px;
+    align-items: center;
+  }
+  .object-experience .ox-board-title-tape {
+    padding: 9px 12px;
+  }
+  .object-experience .ox-board-title-tape h2 {
+    font-size: 19px;
+    letter-spacing: 0;
+  }
+  .object-experience .ox-board-title-tape p {
+    font-size: 8px;
+  }
+  .object-experience .ox-board-body {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+  }
+  .object-experience .ox-pinned-notes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    flex-shrink: 0;
+    gap: 9px 12px;
+    padding: 4px 4px 6px;
+    overflow: visible;
+  }
+  .object-experience .ox-small-note {
+    padding: 17px 10px 10px;
+    min-height: 65px;
+  }
+  .object-experience .ox-small-note small {
+    font-size: 8px;
+    margin-bottom: 3px;
+  }
+  .object-experience .ox-small-note strong {
+    font-size: 10px;
+  }
+  .object-experience .ox-small-note > span:not(.ox-note-pin) {
+    display: none;
+  }
+  .object-experience .ox-small-note .ox-note-pin {
+    width: 7px;
+    height: 7px;
+    top: 4px;
+  }
+  .object-experience .ox-large-note {
+    padding: 34px 20px 25px;
+    flex: 1;
+    min-height: 0;
+  }
+  .object-experience .ox-note-meta {
+    font-size: 9px;
+  }
+  .object-experience .ox-large-note h3 {
+    font-size: 25px;
+    margin-top: 20px;
+  }
+  .object-experience .ox-note-organization {
+    font-size: 12px;
+  }
+  .object-experience .ox-note-description {
+    font-size: 14px;
+  }
+  .object-experience .ox-note-signature {
+    padding-top: 17px;
+  }
+  .object-experience .ox-board-footer {
+    padding-top: 12px;
+    justify-content: center;
+  }
+  .object-experience .ox-board-footer > p {
+    display: none;
+  }
+  .object-experience .ox-board-footer .ox-stepper {
+    justify-content: space-between;
+    width: 100%;
+  }
+  .object-experience .ox-mail-object {
+    height: 90svh;
+    padding: 23px 13px 52px;
+  }
+  .object-experience .ox-letter {
+    transform: none;
+    border-width: 4px;
+  }
+  .object-experience .ox-letter-header {
+    padding: 16px 15px 18px;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .object-experience .ox-letter-from {
+    font-size: 8px;
+  }
+  .object-experience .ox-letter-from strong {
+    font-size: 10px;
+  }
+  .object-experience .ox-letter-header .ox-close {
+    margin-left: auto;
+  }
+  .object-experience .ox-letter-stamp {
+    display: none;
+  }
+  .object-experience .ox-letter-content {
+    padding: 0 21px 26px;
+  }
+  .object-experience .ox-letter-greeting {
+    font-size: 10px;
+  }
+  .object-experience .ox-letter-content h2 {
+    font-size: 26px;
+    letter-spacing: -1.5px;
+  }
+  .object-experience .ox-letter-intro {
+    font-size: 14px;
+  }
+  .object-experience .ox-letter-links > a {
+    gap: 12px;
+  }
+  .object-experience .ox-letter-links .ox-pixel-icon {
+    width: 24px;
+    height: 24px;
+  }
+  .object-experience .ox-letter-links strong {
+    font-size: 14px;
+  }
+  .object-experience .ox-letter-links small {
+    font-size: 10px;
+  }
+  .object-experience .ox-envelope-front {
+    height: 72px;
+    padding-bottom: 14px;
+  }
+  .object-experience .ox-envelope-front span {
+    font-size: 8px;
+  }
+}
+@media (max-height: 610px) and (min-width: 651px) {
+  .object-experience .ox-computer-brand {
+    padding-bottom: 8px;
+  }
+  .object-experience .ox-computer-bottom {
+    padding: 11px 7px 13px;
+  }
+  .object-experience .ox-computer-neck,
+  .object-experience .ox-computer-foot {
+    height: 11px;
+  }
+  .object-experience .ox-book-top {
+    margin-bottom: 8px;
+  }
+  .object-experience .ox-bookmark {
+    min-height: 45px;
+    padding-top: 5px;
+  }
+  .object-experience .ox-board-header {
+    padding-bottom: 14px;
+  }
+  .object-experience .ox-board-footer {
+    padding-top: 10px;
+  }
+  .object-experience .ox-mail-object {
+    padding-top: 14px;
+    padding-bottom: 45px;
+  }
+  .object-experience .ox-envelope-front {
+    height: 65px;
+  }
+  .object-experience .ox-letter-header {
+    padding-top: 15px;
+    padding-bottom: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .object-experience,
+  .object-experience *,
+  .object-experience *::before,
+  .object-experience *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

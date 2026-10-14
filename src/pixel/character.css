@@ -1,0 +1,51 @@
+.pr-character {
+  pointer-events: none;
+}
+.pr-character-moving .pr-character-step-front {
+  animation: pr-robot-step 0.28s steps(2, end) infinite;
+}
+.pr-character-moving .pr-character-step-back {
+  animation: pr-robot-step 0.28s steps(2, end) infinite;
+  animation-delay: -0.14s;
+}
+.pr-character-moving .pr-character-upper {
+  animation: pr-robot-bob 0.28s steps(2, end) infinite;
+}
+.pr-character-moving .pr-character-arm {
+  animation: pr-robot-arm 0.28s steps(2, end) infinite;
+}
+.pr-character-moving .pr-character-arm-right {
+  animation-delay: -0.14s;
+}
+@keyframes pr-robot-step {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+@keyframes pr-robot-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1px);
+  }
+}
+@keyframes pr-robot-arm {
+  0%,
+  100% {
+    transform: translateY(1px);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pr-character * {
+    animation: none !important;
+  }
+}
