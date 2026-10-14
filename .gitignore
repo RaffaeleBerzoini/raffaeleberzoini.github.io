@@ -1,0 +1,15 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.vite/
+qa/
+*.log
+.npm-cache/
+.env
+.env.*
+!.env.example
+coverage/
+playwright-report/
+test-results/
+.DS_Store
+Thumbs.db
