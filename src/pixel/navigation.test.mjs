@@ -45,6 +45,7 @@ const stations = {
   profile: { x: -20, y: 420 },
   research: { x: 700, y: 486 },
   contact: { x: 799, y: 495 },
+  window: { x: 491, y: 379 },
 };
 
 function assertSafePath(start, path) {

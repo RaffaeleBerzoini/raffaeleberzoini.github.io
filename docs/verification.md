@@ -97,6 +97,22 @@ Phone checks use browser emulation rather than physical hardware. New preview: `
 - Screenshots: `qa/pixel-cuddly-cats.png`, `qa/pixel-cat-new-walk.png`, and `qa/pixel-cuddly-cat-mobile.png`.
 - Final browser console check returned no errors or warnings.
 
+## Night Post window game — 15 October 2026
+
+- Saved the approved workshop as `8da23c8` before implementing the game. Pixel Lab remains the independent root application.
+- The window is now a fifth reachable station. Clicking it walks the robot into position and opens a wooden window frame with an original 640 × 360 pixel city, postal drone, six delivery windows and a POST pickup dock.
+- `npm.cmd test`: 49 passed. New coverage includes flight bounds and diagonal input, hover/reload requirements, antenna collisions and cooldown, pause, battery expiry, winning, clean restart and the window's navigation routes.
+- `npm.cmd run build`: passed with strict TypeScript checking. Main JavaScript is approximately 103.4 KB gzip; no new dependencies or remote game assets were added.
+- Desktop 1440 × 1000: opened the window through actual walking, delivered with held keyboard input, then completed all six deliveries using held pointer input and depot returns. The route finished with about 11 seconds remaining. All delivered windows stayed lit and the best score reached 6/6.
+- P paused the flight and held the battery steady; resume continued the same route. Esc restored the room and its focus. The room retained the delivered lights for the session; E reopened a fresh 0/6 flight with the saved best score.
+- At 390 × 844, held direction-pad controls completed the first delivery while the workshop robot stayed still. At 320 × 740, the intro and start button fit inside the glass, controls stayed readable and there was no horizontal page overflow.
+- At 844 × 390, the compact frame keeps the complete flight canvas and controls visible. Start and pause were exercised in this layout.
+- Emulated reduced motion removes the window arrival animation; the renderer also disables decorative parallax, twinkles, rotor motion and bobbing. Player-controlled motion remains available. Browser viewport and media overrides were reset afterward.
+- The final reload and window opening produced no new browser console errors or warnings.
+- Screenshots: `qa/night-post-first-delivery.png`, `qa/night-post-three-deliveries.png`, `qa/night-post-route-complete.png`, and `qa/night-post-mobile.png`.
+
+Phone checks use browser emulation and simulated input rather than physical hardware. Automatic pause on page blur/visibility loss and browser-storage fallback were reviewed in code; these branches were not separately exercised in the browser.
+
 ## Boundaries
 
 Public professional facts and research metadata are documented in `profile-sources.md`. This is a local portfolio; there has been no cloud deployment. External destinations and the optional GitHub API depend on internet access. Browser verification is not an exhaustive audit across every browser, assistive technology or device.

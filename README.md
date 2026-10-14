@@ -17,16 +17,27 @@ Open `http://127.0.0.1:5173/`. This site is exclusively Pixel Lab: it has no edi
 - Approach or click the **chair/computer**. The robot extends its legs and sits facing the screen. Press **E / Space** once seated to browse projects.
 - Move or choose another destination to stand up and continue exploring.
 - Click the **Journey noticeboard**, **bookshelf**, or **mailbox** to walk there and open its contents. The robot routes around furniture.
+- Approach the **window** and press **E**, or click it, to play **Night Post** inside its wooden frame.
 - Press **E / Space** near an object to interact; **Esc** returns to the room.
 - Inside projects, publications and Journey, use **Right / Up / W / D** for the next item and **Left / Down / A / S** for the previous item.
-- Use **Explore** to choose a destination. Its small arrow buttons open the book, journey and contacts immediately; the computer starts with taking a seat.
+- Use **Explore** to choose a destination. Its small arrow buttons open the book, journey, contacts and window immediately; the computer starts with taking a seat.
 - The **?** button explains controls and lets you pause room ambience. Reduced-motion preferences are respected.
 
 On narrow screens, the camera follows the character. Each object has its own pixel-art reading interface and keyboard-accessible controls. No side panel is needed.
 
-The lower two Journey notes occasionally fall like leaves beside a curled gray tabby's bed (one fall about every 78 seconds). After a sleepy pause, the cat collects the note, walks to the board, turns its back and stands on its hind legs to reattach it before returning to bed. A second gray tabby lies on the bookshelf, looking toward the viewer with its head tilted and its tail hanging over the books. The terminal responds to explored topics, books move subtly, and a robotic courier exchanges letters. The window remains decorative; no minigame has been implemented.
+The lower two Journey notes occasionally fall like leaves beside a curled gray tabby's bed (one fall about every 78 seconds). After a sleepy pause, the cat collects the note, walks to the board, turns its back and stands on its hind legs to reattach it before returning to bed. A second gray tabby lies on the bookshelf, looking toward the viewer with its head tilted and its tail hanging over the books. The terminal responds to explored topics, books move subtly, and a robotic courier exchanges letters.
 
 Both cats have larger, softly rounded faces and smiling sleeping eyes. The helper's four-beat walk follows distance travelled, with articulated legs, planted paws and a small body/tail sway; it stops stepping when stationary.
+
+## Night Post
+
+The window opens onto a pixel-art night city. Fly the postal drone to the green outlined balcony and hover briefly to deliver its letter. That window lights up; return to the **POST** dock to collect the next envelope. Deliver all six letters before the 60-second battery runs out. Antenna bumps cost three seconds of battery.
+
+- **WASD / arrows** move the drone. Hold a point in the sky with a mouse or finger to steer there; mobile also has a direction pad.
+- **P** or the pause button pauses/resumes. Switching away from the page automatically pauses the flight.
+- **Esc** or the close button returns to the workshop. Lit city windows remain visible in the room for the session.
+- The result screen starts a fresh flight. The best delivery count is saved only in this browser, with a storage-free fallback.
+- Reduced motion disables decorative twinkling, rotor animation and parallax while retaining the player-controlled flight.
 
 ## Build
 

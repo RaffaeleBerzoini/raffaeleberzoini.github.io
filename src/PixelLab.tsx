@@ -11,6 +11,7 @@ import "@fontsource/pixelify-sans/500.css";
 import RoomArtwork, { ChairForeground } from "./pixel/RoomArtwork";
 import CharacterSprite, { type CharacterPose } from "./pixel/CharacterSprite";
 import ObjectExperience, { type RoomSection } from "./pixel/ObjectExperience";
+import WindowDelivery from "./pixel/WindowDelivery";
 import {
   findPath,
   moveWithCollisions,
@@ -20,8 +21,9 @@ import {
 import "./pixel-lab.css";
 
 const Artwork = memo(RoomArtwork);
+type StationId = RoomSection | "window";
 type Station = {
-  id: RoomSection;
+  id: StationId;
   name: string;
   title: string;
   glyph: string;
@@ -66,6 +68,15 @@ const STATIONS: Station[] = [
     hit: { x: 781, y: 333, width: 76, height: 122 },
     label: { x: 815, y: 278 },
   },
+  {
+    id: "window",
+    name: "Window",
+    title: "Fly the night post",
+    glyph: "✦",
+    point: { x: 491, y: 379 },
+    hit: { x: 389, y: 115, width: 205, height: 205 },
+    label: { x: 491, y: 101 },
+  },
 ];
 const KEY_DIRECTIONS: Record<string, Direction> = {
   w: "up",
@@ -83,17 +94,18 @@ const SEAT_DURATION = 1.1;
 const EXIT_DURATION = 0.8;
 
 export default function PixelLab() {
-  const [active, setActive] = useState<RoomSection | null>(null);
-  const [near, setNear] = useState<RoomSection | null>(null);
-  const [visited, setVisited] = useState<RoomSection[]>([]);
+  const [active, setActive] = useState<StationId | null>(null);
+  const [near, setNear] = useState<StationId | null>(null);
+  const [visited, setVisited] = useState<StationId[]>([]);
   const [direction, setDirection] = useState<Direction>("down");
   const [moving, setMoving] = useState(false);
   const [pose, setPose] = useState<CharacterPose>("standing");
   const [destination, setDestination] = useState<Point | null>(null);
-  const [travelTo, setTravelTo] = useState<RoomSection | null>(null);
+  const [travelTo, setTravelTo] = useState<StationId | null>(null);
   const [quickOpen, setQuickOpen] = useState(false);
   const [help, setHelp] = useState(false);
   const [ambient, setAmbient] = useState(true);
+  const [nightLights, setNightLights] = useState(0);
   const [message, setMessage] = useState(
     "A little world of ideas. Make yourself at home.",
   );
@@ -112,9 +124,9 @@ export default function PixelLab() {
   const seatArmed = useRef(true);
   const approachingChair = useRef(false);
   const path = useRef<Point[]>([]);
-  const queued = useRef<RoomSection | null>(null);
-  const nearRef = useRef<RoomSection | null>(null);
-  const activeRef = useRef<RoomSection | null>(null);
+  const queued = useRef<StationId | null>(null);
+  const nearRef = useRef<StationId | null>(null);
+  const activeRef = useRef<StationId | null>(null);
   const motionRef = useRef({ moving: false, direction: "down" as Direction });
   const camera = useRef({ width: 1040, x: -170, targetX: -170 });
   const reduced = useRef(
@@ -184,7 +196,7 @@ export default function PixelLab() {
     [beginExit],
   );
 
-  const openStation = useCallback((id: RoomSection) => {
+  const openStation = useCallback((id: StationId) => {
     // The computer becomes usable only after the character has taken a seat.
     if (id === "projects" && poseRef.current !== "seated") return;
     for (const source of movementInputs.current.keys())
@@ -226,7 +238,7 @@ export default function PixelLab() {
   }, []);
 
   const walkTo = useCallback(
-    (target: Point, station?: RoomSection) => {
+    (target: Point, station?: StationId) => {
       if (activeRef.current) return;
       if (station === "projects" && poseRef.current === "seated") {
         openStation("projects");
@@ -639,7 +651,7 @@ export default function PixelLab() {
           ref={sceneRef}
           tabIndex={0}
           role="region"
-          aria-label="Playable workshop. Move with W A S D or arrow keys. Click an object to walk to it. At the computer, take a seat, then press E to explore projects."
+          aria-label="Playable workshop. Move with W A S D or arrow keys. Click an object to walk to it. Sit at the computer for projects, or press E by the window to fly Night Post."
           aria-describedby="pr-controls"
         >
           <svg
@@ -647,11 +659,12 @@ export default function PixelLab() {
             viewBox="-170 70 1040 520"
             className="pr-world-svg"
             onPointerDown={floorClick}
-            aria-label="Pixel art room with a computer, bookshelf, noticeboard and mailbox"
+            aria-label="Pixel art room with a computer, bookshelf, noticeboard, mailbox and a playable night window"
           >
             <Artwork
               activeTopic={active ?? travelTo ?? near}
               ambientEnabled={ambient}
+              nightLights={nightLights}
             />
             {destination && (
               <g
@@ -713,7 +726,9 @@ export default function PixelLab() {
                         ? "JOURNEY"
                         : s.id === "contact"
                           ? "CONTACT"
-                          : s.id.toUpperCase())}
+                          : s.id === "window"
+                            ? "NIGHT POST"
+                            : s.id.toUpperCase())}
                   </text>
                 </g>
                 {visited.includes(s.id) && (
@@ -880,7 +895,9 @@ export default function PixelLab() {
         </div>
         <div
           className="pr-progress"
-          aria-label={visited.length + " of 4 places explored"}
+          aria-label={
+            visited.length + " of " + STATIONS.length + " places explored"
+          }
         >
           {STATIONS.map((s) => (
             <i
@@ -888,7 +905,9 @@ export default function PixelLab() {
               key={s.id}
             />
           ))}
-          <span>{visited.length}/4 explored</span>
+          <span>
+            {visited.length}/{STATIONS.length} explored
+          </span>
         </div>
       </footer>
       <p className="pr-sr-only" role="status">
@@ -967,13 +986,19 @@ export default function PixelLab() {
               <dd>Take a seat, then press E for projects. Move to stand up.</dd>
             </div>
             <div>
+              <dt>The window</dt>
+              <dd>
+                Fly the Night Post drone. Deliver letters and light up the city.
+              </dd>
+            </div>
+            <div>
               <dt>Escape</dt>
               <dd>Return to the room</dd>
             </div>
           </dl>
           <p className="pr-help-note">
-            Explore offers direct access to the bookshelf, journey and mailbox.
-            The computer starts with a seat.
+            Explore offers direct access to the bookshelf, journey, mailbox and
+            window. The computer starts with a seat.
           </p>
           <button
             className="pr-ambient-button"
@@ -984,7 +1009,17 @@ export default function PixelLab() {
           </button>
         </aside>
       )}
-      {active && <ObjectExperience section={active} onClose={closeObject} />}
+      {active === "window" && (
+        <WindowDelivery
+          onClose={closeObject}
+          onProgress={(count) =>
+            setNightLights((previous) => Math.max(previous, count))
+          }
+        />
+      )}
+      {active && active !== "window" && (
+        <ObjectExperience section={active} onClose={closeObject} />
+      )}
     </div>
   );
 }

@@ -1,0 +1,675 @@
+.night-post {
+  --np-wood: #cda88f;
+  --np-light: #e8c8a6;
+  --np-mint: #bed6ac;
+  box-sizing: border-box;
+  width: min(960px, calc(100vw - 48px), calc((100svh - 230px) * 1.7778 + 40px));
+  max-width: none;
+  max-height: calc(100svh - 28px);
+  padding: 0;
+  margin: auto;
+  border: 0;
+  border-radius: 0;
+  color: #eee3c9;
+  background: transparent;
+  overflow: auto;
+  overscroll-behavior: contain;
+  font-family: "Pixelify Sans", monospace;
+  color-scheme: dark;
+}
+.night-post *,
+.night-post *::before,
+.night-post *::after {
+  box-sizing: border-box;
+}
+.night-post::backdrop {
+  background: #091320c7;
+}
+.night-post[open] {
+  animation: np-window-open 300ms steps(8, end) both;
+}
+.night-post h2,
+.night-post h3,
+.night-post p {
+  margin: 0;
+}
+.night-post button {
+  border-radius: 0;
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.night-post button:focus-visible,
+.night-post canvas:focus-visible {
+  outline: 2px solid #f4d58e;
+  outline-offset: 3px;
+}
+.night-post button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.np-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 4px 15px;
+  gap: 16px;
+}
+.np-title-block {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.np-title-block p {
+  font:
+    9px/1.5 "IBM Plex Mono",
+    monospace;
+  letter-spacing: 1.8px;
+  color: #a6babf;
+}
+.np-title-block h2 {
+  font:
+    400 34px/1.1 "Pixelify Sans",
+    monospace;
+  letter-spacing: 1px;
+}
+.np-stamp {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 2px dashed #8da99c;
+  color: var(--np-mint);
+  font-size: 29px;
+  transform: rotate(-6deg);
+}
+.np-close {
+  width: 43px;
+  height: 45px;
+  border: 1px solid #62737c;
+  background: #25364a;
+  color: #eee3c9;
+  font-size: 25px !important;
+  line-height: 24px;
+  box-shadow: 3px 3px 0 #0b1423;
+}
+.np-close small {
+  display: block;
+  font-size: 9px;
+  line-height: 12px;
+}
+.np-window-frame {
+  padding: 10px 12px 0;
+  background: var(--np-wood);
+  border-top: 6px solid var(--np-light);
+  border-left: 6px solid #b58d7c;
+  border-right: 6px solid #a68075;
+  box-shadow:
+    8px 10px 0 #080f1fa6,
+    inset 3px 0 #e4c1a2,
+    inset -3px 0 #ddba9f;
+}
+.np-flight-hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 40px;
+  padding: 8px 13px;
+  gap: 10px;
+  background: #15273b;
+  border-bottom: 2px solid #425366;
+  box-shadow: 0 -4px #836b69;
+}
+.np-route {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.55px;
+}
+.np-live-light {
+  width: 5px;
+  height: 5px;
+  background: var(--np-mint);
+  flex: 0 0 auto;
+}
+.np-battery {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  color: var(--np-mint);
+}
+.np-battery strong {
+  font-size: 20px;
+  font-weight: 400;
+  min-width: 48px;
+}
+.np-battery strong small {
+  font-size: 12px;
+  margin-left: 2px;
+}
+.np-battery-icon {
+  position: relative;
+  display: block;
+  width: 30px;
+  height: 13px;
+  padding: 2px;
+  border: 1px solid currentColor;
+}
+.np-battery-icon::after {
+  content: "";
+  position: absolute;
+  right: -4px;
+  top: 3px;
+  width: 3px;
+  height: 5px;
+  background: currentColor;
+}
+.np-battery-icon i {
+  display: block;
+  height: 100%;
+  background: currentColor;
+}
+.np-battery-low {
+  color: #f0ae8c;
+}
+.np-glass {
+  position: relative;
+  isolation: isolate;
+  background: #101c32;
+  border: 4px solid #786a71;
+  border-top: 0;
+  overflow: hidden;
+}
+.np-glass canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  image-rendering: pixelated;
+  touch-action: none;
+  cursor: crosshair;
+  outline-offset: -4px !important;
+}
+.np-window-cross {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.np-window-cross i {
+  position: absolute;
+  background: #b98f82;
+  box-shadow:
+    2px 0 #e1bda0,
+    4px 3px #111e3338;
+}
+.np-window-cross i:first-child {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 7px;
+}
+.np-window-cross i:last-child {
+  top: 46%;
+  left: 0;
+  right: 0;
+  height: 7px;
+}
+.np-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 26px;
+  background: #101c321a;
+}
+.np-flight-card {
+  width: min(345px, 80%);
+  padding: 24px;
+  background: #112438ef;
+  border: 1px solid #708477;
+  box-shadow: 5px 5px 0 #071321a8;
+}
+.np-card-eyebrow {
+  display: block;
+  font:
+    8px/1.6 "IBM Plex Mono",
+    monospace;
+  letter-spacing: 1.3px;
+  color: #b9d2a4;
+}
+.np-flight-card h3 {
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 1.08;
+  margin: 12px 0;
+}
+.np-flight-card p {
+  font:
+    11px/1.8 "IBM Plex Mono",
+    monospace;
+  color: #c1c9c3;
+}
+.np-primary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 11px 12px;
+  margin-top: 21px;
+  color: #193d3b;
+  background: #c2d8ae;
+  border: 1px solid #e0e4be;
+  box-shadow: 3px 3px 0 #577d70;
+  font-size: 16px !important;
+}
+.np-primary:hover {
+  background: #dce7c4;
+}
+.np-flight-card > small {
+  display: block;
+  font-size: 11px;
+  margin-top: 12px;
+  color: #a8bab8;
+}
+.np-docking {
+  position: absolute;
+  left: 50%;
+  bottom: 13px;
+  transform: translateX(-50%);
+  padding: 6px 12px 9px;
+  color: #e6e4bd;
+  font-size: 13px;
+  background: #14273be8;
+  border: 1px solid #80a293;
+  min-width: 130px;
+  text-align: center;
+}
+.np-docking i {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  background: #c4d8ac;
+}
+.np-window-sill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 -21px;
+  min-height: 47px;
+  padding: 9px 23px;
+  position: relative;
+  border-top: 5px solid #f0d0aa;
+  border-bottom: 8px solid #927275;
+  background: #d9b499;
+  box-shadow: inset 0 -3px #bd927e;
+  color: #493f4b;
+}
+.np-delivery-count {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.np-delivery-count > span {
+  display: grid;
+  grid-template-columns: repeat(2, 3px);
+  grid-template-rows: repeat(2, 4px);
+  gap: 1px;
+  padding: 2px;
+  border: 1px solid #867675;
+  background: #8b7b77;
+}
+.np-delivery-count i {
+  background: #716b71;
+}
+.np-delivery-count .np-window-lit {
+  border-color: #685c60;
+  background: #7b6867;
+}
+.np-delivery-count .np-window-lit i {
+  background: #fff0b4;
+}
+.np-delivery-count strong {
+  font-size: 18px;
+  margin-left: 4px;
+  font-weight: 400;
+}
+.np-delivery-count strong small {
+  font-size: 13px;
+}
+.np-record {
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+.np-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 18px 5px 4px;
+}
+.np-controls p {
+  font-size: 13px;
+  line-height: 1.8;
+  color: #c2d0c6;
+}
+.np-controls p span,
+.np-controls p small {
+  display: block;
+}
+.np-controls p small {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 9px;
+  color: #94a9b5;
+}
+.np-controls p b {
+  color: #ddad8e;
+  font-weight: 400;
+  padding: 0 6px;
+}
+.np-controls kbd {
+  font: inherit;
+  color: #e8dfc6;
+}
+.np-pause {
+  flex: 0 0 38px;
+  width: 38px;
+  height: 36px;
+  color: #c6d3b7;
+  border: 1px solid #637a80;
+  background: #263c4e;
+}
+.np-dpad {
+  display: none;
+}
+@keyframes np-window-open {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (max-width: 650px) {
+  .night-post {
+    width: calc(100vw - 24px);
+    max-height: calc(100svh - 20px);
+  }
+  .np-header {
+    padding: 0 3px 12px;
+  }
+  .np-title-block {
+    gap: 10px;
+  }
+  .np-title-block h2 {
+    font-size: 28px;
+  }
+  .np-title-block p {
+    font-size: 7px;
+    letter-spacing: 1px;
+  }
+  .np-stamp {
+    width: 33px;
+    height: 33px;
+    font-size: 23px;
+  }
+  .np-window-frame {
+    padding: 6px 5px 0;
+    border-left-width: 4px;
+    border-right-width: 4px;
+    border-top-width: 4px;
+  }
+  .np-flight-hud {
+    min-height: 37px;
+    padding: 6px 7px;
+  }
+  .np-route {
+    font-size: 10px;
+    letter-spacing: 0;
+    gap: 5px;
+  }
+  .np-battery {
+    gap: 7px;
+  }
+  .np-battery-icon {
+    width: 22px;
+    height: 11px;
+  }
+  .np-battery strong {
+    font-size: 17px;
+    min-width: 42px;
+  }
+  .np-glass {
+    border-width: 2px;
+    border-top: 0;
+  }
+  .np-overlay {
+    padding: 9px;
+    justify-content: center;
+  }
+  .np-flight-card {
+    width: min(310px, 100%);
+    padding: 12px 15px;
+  }
+  .np-card-eyebrow {
+    font-size: 7px;
+    letter-spacing: 0.7px;
+  }
+  .np-flight-card h3 {
+    font-size: 23px;
+    margin: 6px 0;
+  }
+  .np-flight-card p {
+    font-size: 9px;
+    line-height: 1.5;
+  }
+  .np-primary {
+    margin-top: 10px;
+    padding: 7px 10px;
+    font-size: 14px !important;
+  }
+  .np-flight-card > small {
+    font-size: 9px;
+    margin-top: 7px;
+  }
+  .np-window-sill {
+    margin: 0 -10px;
+    padding: 7px 11px;
+    min-height: 42px;
+    border-top-width: 4px;
+    border-bottom-width: 6px;
+  }
+  .np-delivery-count {
+    gap: 5px;
+  }
+  .np-record {
+    font-size: 10px;
+  }
+  .np-controls {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 13px;
+  }
+  .np-controls p {
+    flex: 1;
+    font-size: 11px;
+    line-height: 1.7;
+  }
+  .np-controls p small {
+    font-size: 8px;
+  }
+  .np-controls p b {
+    padding: 0 3px;
+  }
+  .np-dpad {
+    display: grid;
+    flex: 0 0 100%;
+    justify-content: center;
+    width: 150px;
+    margin: 0 auto;
+    grid-template-columns: repeat(3, 46px);
+    grid-template-rows: repeat(2, 42px);
+    gap: 4px;
+  }
+  .np-dpad button {
+    border: 1px solid #69858b;
+    background: #243c4d;
+    color: #d5e0bf;
+    box-shadow: 2px 2px 0 #091523;
+    font-size: 23px;
+    touch-action: none;
+  }
+  .np-dpad button:active {
+    background: #3c5961;
+  }
+  .np-fly-up {
+    grid-column: 2;
+  }
+  .np-fly-left {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .np-fly-down {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .np-fly-right {
+    grid-column: 3;
+    grid-row: 2;
+  }
+}
+@media (max-width: 360px) {
+  .np-flight-card {
+    padding: 8px 12px;
+  }
+  .np-flight-card h3 {
+    font-size: 20px;
+    margin: 4px 0;
+  }
+  .np-card-eyebrow {
+    font-size: 6px;
+  }
+  .np-flight-card p {
+    font-size: 8px;
+  }
+  .np-flight-card > small {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .night-post[open] {
+    animation: none;
+  }
+}
+@media (max-height: 600px) and (min-width: 651px) {
+  .night-post {
+    width: min(
+      700px,
+      calc(100vw - 32px),
+      calc((100svh - 190px) * 1.7778 + 28px)
+    );
+  }
+  .np-header {
+    padding-bottom: 6px;
+  }
+  .np-title-block {
+    gap: 10px;
+  }
+  .np-title-block h2 {
+    font-size: 22px;
+  }
+  .np-title-block p {
+    font-size: 7px;
+    letter-spacing: 1px;
+  }
+  .np-stamp {
+    width: 28px;
+    height: 28px;
+    font-size: 22px;
+  }
+  .np-close {
+    width: 34px;
+    height: 33px;
+    font-size: 20px !important;
+    line-height: 17px;
+  }
+  .np-close small {
+    font-size: 7px;
+    line-height: 9px;
+  }
+  .np-window-frame {
+    padding: 6px 5px 0;
+    border-width: 4px;
+  }
+  .np-flight-hud {
+    min-height: 28px;
+    padding: 4px 7px;
+  }
+  .np-route {
+    font-size: 10px;
+    letter-spacing: 0;
+  }
+  .np-battery strong {
+    font-size: 16px;
+  }
+  .np-glass {
+    border-width: 2px;
+    border-top: 0;
+  }
+  .np-overlay {
+    padding: 8px;
+    overflow-y: auto;
+  }
+  .np-flight-card {
+    width: 300px;
+    max-height: 100%;
+    padding: 10px 14px;
+    overflow-y: auto;
+  }
+  .np-flight-card h3 {
+    font-size: 23px;
+    margin: 6px 0;
+  }
+  .np-flight-card p {
+    font-size: 9px;
+    line-height: 1.5;
+  }
+  .np-primary {
+    margin-top: 10px;
+    padding: 7px 10px;
+    font-size: 14px !important;
+  }
+  .np-flight-card > small {
+    display: none;
+  }
+  .np-window-sill {
+    margin: 0 -10px;
+    min-height: 32px;
+    padding: 4px 11px;
+    border-top-width: 3px;
+    border-bottom-width: 4px;
+  }
+  .np-controls {
+    padding: 6px 4px 0;
+    gap: 8px;
+  }
+  .np-controls p {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  .np-controls p small {
+    font-size: 8px;
+  }
+  .np-pause {
+    flex-basis: 30px;
+    width: 30px;
+    height: 30px;
+  }
+}

@@ -3,7 +3,7 @@ import "./room-ambience.css";
 import JourneyPostits from "./JourneyPostits";
 import { SleepingTabby } from "./TabbyCats";
 
-type RoomTopic = "projects" | "research" | "profile" | "contact";
+type RoomTopic = "projects" | "research" | "profile" | "contact" | "window";
 
 const TERMINAL_TOPICS: {
   id: RoomTopic;
@@ -30,6 +30,11 @@ const TERMINAL_TOPICS: {
     title: "> CONNECT",
     lines: ["github / linkedin", "musemind.it"],
   },
+  {
+    id: "window",
+    title: "> NIGHT POST",
+    lines: ["one little courier", "six good nights"],
+  },
 ];
 
 /** Only the chair back and seat, for compositing in front of a seated visitor. */
@@ -54,7 +59,7 @@ export function ChairForeground() {
 function TerminalScreen({ activeTopic }: { activeTopic?: RoomTopic | null }) {
   const topics = activeTopic
     ? TERMINAL_TOPICS.filter((topic) => topic.id === activeTopic)
-    : TERMINAL_TOPICS;
+    : TERMINAL_TOPICS.filter((topic) => topic.id !== "window");
   return (
     <g className="pr-terminal-display">
       {topics.map((topic) => (
@@ -104,9 +109,11 @@ function TerminalScreen({ activeTopic }: { activeTopic?: RoomTopic | null }) {
 export default function RoomArtwork({
   activeTopic,
   ambientEnabled = true,
+  nightLights = 0,
 }: {
   activeTopic?: RoomTopic | null;
   ambientEnabled?: boolean;
+  nightLights?: number;
 }) {
   const patternId = useId().replaceAll(":", "");
   return (
@@ -189,6 +196,31 @@ export default function RoomArtwork({
         d="M405 278H433V266H458V281H480V270H502V285H542V270H578V293H405Z"
         fill="#354d65"
       />
+      {[
+        [428, 254],
+        [442, 272],
+        [471, 262],
+        [517, 246],
+        [549, 279],
+        [567, 255],
+      ].map(([x, y], index) => (
+        <g key={index}>
+          <rect
+            x={x}
+            y={y}
+            width="6"
+            height="8"
+            fill={index < nightLights ? "#edc687" : "#23374f"}
+          />
+          {index < nightLights && (
+            <path
+              d={`M${x + 2} ${y}V${y + 8}M${x} ${y + 4}H${x + 6}`}
+              stroke="#a78b73"
+              strokeWidth="1"
+            />
+          )}
+        </g>
+      ))}
       <path
         d="M531 148H551V153H559V173H551V181H531V173H523V153H531Z"
         fill="#f2e6bd"
@@ -219,6 +251,19 @@ export default function RoomArtwork({
       <rect x="397" y="211" width="189" height="8" fill="#b88f83" />
       <rect x="381" y="301" width="221" height="12" fill="#e6c7a9" />
       <rect x="381" y="313" width="221" height="7" fill="#94777a" />
+      <g className="pr-night-post-plaque">
+        <rect x="462" y="305" width="63" height="12" fill="#365453" />
+        <text
+          x="493"
+          y="314"
+          textAnchor="middle"
+          fill="#d8ddbb"
+          fontSize="8"
+          fontFamily="Pixelify Sans, monospace"
+        >
+          ✉ NIGHT POST
+        </text>
+      </g>
 
       {/* The journey nook: a bigger corkboard, safely clear of the computer. */}
       <g className="pr-journey-board">

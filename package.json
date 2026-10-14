@@ -8,7 +8,7 @@
     "dev:classic": "vite --config sites/classic/vite.config.ts",
     "build": "tsc -b && vite build",
     "build:classic": "tsc --project sites/classic/tsconfig.json && vite build --config sites/classic/vite.config.ts",
-    "test": "node --test src/pixel/navigation.test.mjs src/pixel/postit-scene.test.mjs src/pixel/cat-gait.test.mjs",
+    "test": "node --test src/pixel/navigation.test.mjs src/pixel/postit-scene.test.mjs src/pixel/cat-gait.test.mjs src/pixel/delivery-game.test.mjs",
     "preview": "vite preview --host 127.0.0.1",
     "preview:classic": "vite preview --config sites/classic/vite.config.ts"
   },
