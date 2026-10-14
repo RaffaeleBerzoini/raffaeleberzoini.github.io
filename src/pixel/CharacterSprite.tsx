@@ -1,12 +1,14 @@
 import "./character.css";
 
 export type CharacterDirection = "up" | "down" | "left" | "right";
+export type CharacterPose = "standing" | "seating" | "seated" | "exiting";
 
 export interface CharacterSpriteProps {
   x: number;
   y: number;
   direction: CharacterDirection;
   moving: boolean;
+  pose?: CharacterPose;
 }
 
 /** A 44 × 66 pixel-grid robot, positioned by the midpoint between its feet. */
@@ -15,15 +17,18 @@ export default function CharacterSprite({
   y,
   direction,
   moving,
+  pose = "standing",
 }: CharacterSpriteProps) {
-  const side = direction === "left" || direction === "right";
-  const back = direction === "up";
+  const facing = pose === "standing" ? direction : "up";
+  const side = facing === "left" || facing === "right";
+  const back = facing === "up";
 
   return (
     <g
-      className={`pr-character${moving ? " pr-character-moving" : ""}`}
+      className={`pr-character${moving && pose === "standing" ? " pr-character-moving" : ""}`}
       transform={`translate(${Math.round(x)} ${Math.round(y)})`}
-      data-direction={direction}
+      data-direction={facing}
+      data-pose={pose}
       aria-hidden="true"
       shapeRendering="crispEdges"
     >
@@ -33,31 +38,67 @@ export default function CharacterSprite({
         fill="#14283e"
         opacity=".34"
       />
-      <g transform={direction === "right" ? "scale(-1 1)" : undefined}>
+      <g transform={facing === "right" ? "scale(-1 1)" : undefined}>
         {side ? (
           <>
             <g className="pr-character-step pr-character-step-back">
-              <rect x="4" y="-16" width="8" height="14" fill="#526d79" />
-              <path d="M1-5H13V0H-2V-3H1Z" fill="#20364d" />
-              <rect x="1" y="-5" width="8" height="2" fill="#71908b" />
+              <rect
+                className="pr-character-leg"
+                x="4"
+                y="-16"
+                width="8"
+                height="14"
+                fill="#526d79"
+              />
+              <g className="pr-character-foot">
+                <path d="M1-5H13V0H-2V-3H1Z" fill="#20364d" />
+                <rect x="1" y="-5" width="8" height="2" fill="#71908b" />
+              </g>
             </g>
             <g className="pr-character-step pr-character-step-front">
-              <rect x="-9" y="-16" width="9" height="14" fill="#758e91" />
-              <path d="M-13-5H1V0H-16V-3H-13Z" fill="#20364d" />
-              <rect x="-13" y="-5" width="9" height="2" fill="#adc1af" />
+              <rect
+                className="pr-character-leg"
+                x="-9"
+                y="-16"
+                width="9"
+                height="14"
+                fill="#758e91"
+              />
+              <g className="pr-character-foot">
+                <path d="M-13-5H1V0H-16V-3H-13Z" fill="#20364d" />
+                <rect x="-13" y="-5" width="9" height="2" fill="#adc1af" />
+              </g>
             </g>
           </>
         ) : (
           <>
             <g className="pr-character-step pr-character-step-front">
-              <rect x="-12" y="-16" width="8" height="13" fill="#69838a" />
-              <rect x="-15" y="-5" width="13" height="5" fill="#20364d" />
-              <rect x="-13" y="-5" width="9" height="2" fill="#a3b5a6" />
+              <rect
+                className="pr-character-leg"
+                x="-12"
+                y="-16"
+                width="8"
+                height="13"
+                fill="#69838a"
+              />
+              <g className="pr-character-foot">
+                <rect x="-15" y="-5" width="13" height="5" fill="#20364d" />
+                <rect x="-13" y="-5" width="9" height="2" fill="#a3b5a6" />
+              </g>
             </g>
             <g className="pr-character-step pr-character-step-back">
-              <rect x="5" y="-16" width="8" height="13" fill="#69838a" />
-              <rect x="3" y="-5" width="13" height="5" fill="#20364d" />
-              <rect x="5" y="-5" width="9" height="2" fill="#a3b5a6" />
+              <rect
+                className="pr-character-leg"
+                x="5"
+                y="-16"
+                width="8"
+                height="13"
+                fill="#69838a"
+              />
+              <g className="pr-character-foot">
+                <rect x="3" y="-5" width="13" height="5" fill="#20364d" />
+                <rect x="5" y="-5" width="9" height="2" fill="#a3b5a6" />
+              </g>
             </g>
           </>
         )}

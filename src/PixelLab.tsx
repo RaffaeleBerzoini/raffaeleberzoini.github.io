@@ -8,8 +8,8 @@ import {
 } from "react";
 import "@fontsource/pixelify-sans/400.css";
 import "@fontsource/pixelify-sans/500.css";
-import RoomArtwork from "./pixel/RoomArtwork";
-import CharacterSprite from "./pixel/CharacterSprite";
+import RoomArtwork, { ChairForeground } from "./pixel/RoomArtwork";
+import CharacterSprite, { type CharacterPose } from "./pixel/CharacterSprite";
 import ObjectExperience, { type RoomSection } from "./pixel/ObjectExperience";
 import {
   findPath,
@@ -35,7 +35,7 @@ const STATIONS: Station[] = [
     name: "Computer",
     title: "Explore projects",
     glyph: ">_",
-    point: { x: 324, y: 486 },
+    point: { x: 254, y: 486 },
     hit: { x: 190, y: 177, width: 146, height: 155 },
     label: { x: 266, y: 168 },
   },
@@ -46,16 +46,16 @@ const STATIONS: Station[] = [
     glyph: "▤",
     point: { x: 700, y: 486 },
     hit: { x: 643, y: 210, width: 145, height: 240 },
-    label: { x: 712, y: 202 },
+    label: { x: 712, y: 165 },
   },
   {
     id: "profile",
     name: "Noticeboard",
     title: "Discover my journey",
     glyph: "⌑",
-    point: { x: 181, y: 480 },
-    hit: { x: 108, y: 133, width: 96, height: 131 },
-    label: { x: 155, y: 123 },
+    point: { x: -20, y: 420 },
+    hit: { x: -105, y: 140, width: 165, height: 180 },
+    label: { x: -22, y: 125 },
   },
   {
     id: "contact",
@@ -64,7 +64,7 @@ const STATIONS: Station[] = [
     glyph: "✉",
     point: { x: 799, y: 495 },
     hit: { x: 781, y: 333, width: 76, height: 122 },
-    label: { x: 815, y: 323 },
+    label: { x: 815, y: 278 },
   },
 ];
 const KEY_DIRECTIONS: Record<string, Direction> = {
@@ -78,13 +78,17 @@ const KEY_DIRECTIONS: Record<string, Direction> = {
   arrowright: "right",
 };
 const START: Point = { x: 491, y: 515 };
+const CHAIR_POINT = STATIONS[0].point;
+const SEAT_DURATION = 1.1;
+const EXIT_DURATION = 0.8;
 
-export default function PixelLab({ onExit }: { onExit: () => void }) {
+export default function PixelLab() {
   const [active, setActive] = useState<RoomSection | null>(null);
   const [near, setNear] = useState<RoomSection | null>(null);
   const [visited, setVisited] = useState<RoomSection[]>([]);
   const [direction, setDirection] = useState<Direction>("down");
   const [moving, setMoving] = useState(false);
+  const [pose, setPose] = useState<CharacterPose>("standing");
   const [destination, setDestination] = useState<Point | null>(null);
   const [travelTo, setTravelTo] = useState<RoomSection | null>(null);
   const [quickOpen, setQuickOpen] = useState(false);
@@ -99,36 +103,97 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
   const position = useRef<Point>({ ...START });
   // Each physical key or pointer owns its input, even when directions coincide.
   const movementInputs = useRef(new Map<string, Direction>());
+  // A key already held when auto-seating starts must be released before it can
+  // trigger another action. Fresh input during the animation queues standing up.
+  const suppressedInputs = useRef(new Set<string>());
+  const poseRef = useRef<CharacterPose>("standing");
+  const poseElapsed = useRef(0);
+  const exitRequested = useRef(false);
+  const seatArmed = useRef(true);
+  const approachingChair = useRef(false);
   const path = useRef<Point[]>([]);
   const queued = useRef<RoomSection | null>(null);
   const nearRef = useRef<RoomSection | null>(null);
   const activeRef = useRef<RoomSection | null>(null);
   const motionRef = useRef({ moving: false, direction: "down" as Direction });
-  const camera = useRef({ width: 820, x: 50, targetX: 50 });
+  const camera = useRef({ width: 1040, x: -170, targetX: -170 });
   const reduced = useRef(
     window.matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
 
-  const beginManualMove = useCallback((source: string, facing: Direction) => {
-    if (
-      activeRef.current ||
-      document.querySelector("dialog[open]") ||
-      movementInputs.current.has(source)
-    )
-      return;
-    movementInputs.current.set(source, facing);
-    path.current = [];
-    queued.current = null;
-    setDestination(null);
-    setTravelTo(null);
-    setQuickOpen(false);
-    setHelp(false);
+  const changePose = useCallback((next: CharacterPose) => {
+    poseRef.current = next;
+    poseElapsed.current = 0;
+    setPose(next);
   }, []);
 
-  const openStation = useCallback((id: RoomSection) => {
+  const beginExit = useCallback(() => {
+    seatArmed.current = false;
+    exitRequested.current = false;
+    if (poseRef.current === "seating") {
+      exitRequested.current = true;
+      return;
+    }
+    if (poseRef.current !== "seated") return;
+    changePose(reduced.current ? "standing" : "exiting");
+    setMessage("Standing up. Your next move is ready.");
+  }, [changePose]);
+
+  const beginSeat = useCallback(() => {
+    if (poseRef.current !== "standing") return;
+    for (const source of movementInputs.current.keys())
+      suppressedInputs.current.add(source);
     movementInputs.current.clear();
     path.current = [];
     queued.current = null;
+    approachingChair.current = false;
+    exitRequested.current = false;
+    seatArmed.current = false;
+    setTravelTo(null);
+    setDestination(null);
+    setMoving(false);
+    setDirection("up");
+    motionRef.current = { moving: false, direction: "up" };
+    changePose(reduced.current ? "seated" : "seating");
+    setMessage(
+      reduced.current
+        ? "Seated at the computer. Press E to explore projects. Move to stand up."
+        : "Taking a seat at the computer. Your projects will be ready when you press E.",
+    );
+  }, [changePose]);
+
+  const beginManualMove = useCallback(
+    (source: string, facing: Direction) => {
+      if (
+        activeRef.current ||
+        document.querySelector("dialog[open]") ||
+        movementInputs.current.has(source) ||
+        suppressedInputs.current.has(source)
+      )
+        return;
+      movementInputs.current.set(source, facing);
+      approachingChair.current = false;
+      if (poseRef.current !== "standing") beginExit();
+      path.current = [];
+      queued.current = null;
+      setDestination(null);
+      setTravelTo(null);
+      setQuickOpen(false);
+      setHelp(false);
+    },
+    [beginExit],
+  );
+
+  const openStation = useCallback((id: RoomSection) => {
+    // The computer becomes usable only after the character has taken a seat.
+    if (id === "projects" && poseRef.current !== "seated") return;
+    for (const source of movementInputs.current.keys())
+      suppressedInputs.current.add(source);
+    movementInputs.current.clear();
+    exitRequested.current = false;
+    path.current = [];
+    queued.current = null;
+    approachingChair.current = false;
     setTravelTo(null);
     setDestination(null);
     setQuickOpen(false);
@@ -136,7 +201,8 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
     activeRef.current = id;
     setActive(id);
     setMoving(false);
-    motionRef.current.moving = false;
+    setDirection("up");
+    motionRef.current = { moving: false, direction: "up" };
     setVisited((prev) => (prev.includes(id) ? prev : [...prev, id]));
     setMessage(
       "Exploring " +
@@ -149,7 +215,11 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
     activeRef.current = null;
     setActive(null);
     movementInputs.current.clear();
-    setMessage("Back in the workshop. There’s more to discover.");
+    setMessage(
+      poseRef.current === "seated"
+        ? "Back at the computer. Press E to reopen projects, or move to stand up."
+        : "Back in the workshop. There’s more to discover.",
+    );
     requestAnimationFrame(() =>
       sceneRef.current?.focus({ preventScroll: true }),
     );
@@ -158,7 +228,29 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
   const walkTo = useCallback(
     (target: Point, station?: RoomSection) => {
       if (activeRef.current) return;
+      if (station === "projects" && poseRef.current === "seated") {
+        openStation("projects");
+        return;
+      }
+      if (station === "projects" && poseRef.current === "seating") {
+        for (const source of movementInputs.current.keys())
+          suppressedInputs.current.add(source);
+        movementInputs.current.clear();
+        path.current = [];
+        queued.current = null;
+        exitRequested.current = false;
+        setTravelTo(null);
+        setDestination(null);
+        setQuickOpen(false);
+        setHelp(false);
+        return;
+      }
+      for (const source of movementInputs.current.keys())
+        suppressedInputs.current.add(source);
       movementInputs.current.clear();
+      approachingChair.current = station === "projects";
+      if (poseRef.current !== "standing") beginExit();
+      if (station === "projects") seatArmed.current = true;
       const route = findPath(position.current, target);
       path.current = route;
       queued.current = station ?? null;
@@ -181,7 +273,15 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
           position.current.y - target.y,
         ) < 20
       ) {
-        openStation(station);
+        if (
+          station === "projects" &&
+          Math.hypot(
+            position.current.x - target.x,
+            position.current.y - target.y,
+          ) < 0.2
+        )
+          beginSeat();
+        else if (poseRef.current === "standing") openStation(station);
       } else {
         queued.current = null;
         setTravelTo(null);
@@ -189,16 +289,20 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
       }
       sceneRef.current?.focus({ preventScroll: true });
     },
-    [openStation],
+    [openStation, beginExit, beginSeat],
   );
 
   const interact = useCallback(() => {
-    if (nearRef.current) openStation(nearRef.current);
+    if (poseRef.current === "seated") openStation("projects");
+    else if (poseRef.current !== "standing") return;
+    else if (nearRef.current && nearRef.current !== "projects")
+      openStation(nearRef.current);
+    else if (nearRef.current === "projects") walkTo(CHAIR_POINT, "projects");
     else
       setMessage(
         "Move closer to an object, or click it and I’ll take you there.",
       );
-  }, [openStation]);
+  }, [openStation, walkTo]);
 
   useEffect(() => {
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -208,12 +312,22 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
     preference.addEventListener("change", syncMotion);
     const stop = () => {
       movementInputs.current.clear();
+      suppressedInputs.current.clear();
     };
     const editable = (target: EventTarget | null) =>
       target instanceof HTMLElement &&
       (target.isContentEditable ||
         /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
     const keydown = (event: KeyboardEvent) => {
+      const key = event.key.toLowerCase();
+      if (
+        (activeRef.current || document.querySelector("dialog[open]")) &&
+        KEY_DIRECTIONS[key]
+      ) {
+        // A direction pressed inside a dialog belongs to that dialog until
+        // released, including repeated keydown events after the dialog closes.
+        suppressedInputs.current.add("key:" + (event.code || key));
+      }
       if (
         activeRef.current ||
         document.querySelector("dialog[open]") ||
@@ -223,7 +337,6 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
         event.altKey
       )
         return;
-      const key = event.key.toLowerCase();
       if (KEY_DIRECTIONS[key]) {
         event.preventDefault();
         beginManualMove("key:" + (event.code || key), KEY_DIRECTIONS[key]);
@@ -242,8 +355,10 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
     const keyup = (event: KeyboardEvent) => {
       const physicalKey = event.code || event.key.toLowerCase();
       movementInputs.current.delete("key:" + physicalKey);
+      suppressedInputs.current.delete("key:" + physicalKey);
       // Release a D-pad key even if focus moved away before keyup.
       movementInputs.current.delete("dpad-key:" + physicalKey);
+      suppressedInputs.current.delete("dpad-key:" + physicalKey);
     };
     window.addEventListener("keydown", keydown);
     window.addEventListener("keyup", keyup);
@@ -277,13 +392,31 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
       if (disposed) return;
       const delta = Math.min((now - previous) / 1000 || 0, 0.04);
       previous = now;
+      if (!document.hidden) {
+        if (poseRef.current === "seating") {
+          poseElapsed.current += delta;
+          if (reduced.current || poseElapsed.current >= SEAT_DURATION) {
+            changePose("seated");
+            setMessage(
+              "Seated at the computer. Press E to explore projects. Move to stand up.",
+            );
+            if (exitRequested.current) beginExit();
+          }
+        } else if (poseRef.current === "exiting") {
+          poseElapsed.current += delta;
+          if (reduced.current || poseElapsed.current >= EXIT_DURATION) {
+            changePose("standing");
+          }
+        }
+      }
       const old = position.current;
       let dx = 0,
         dy = 0;
       if (
         !activeRef.current &&
         !document.hidden &&
-        !document.querySelector("dialog[open]")
+        !document.querySelector("dialog[open]") &&
+        poseRef.current === "standing"
       ) {
         let left = false,
           right = false,
@@ -300,7 +433,7 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
         if (!dx && !dy && path.current.length) {
           const target = path.current[0];
           const distance = Math.hypot(target.x - old.x, target.y - old.y);
-          if (distance < 3) {
+          if (distance < 0.01) {
             position.current = { ...target };
             path.current.shift();
             if (!path.current.length) setDestination(null);
@@ -322,15 +455,17 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
       const current = position.current;
       const isMoving = Math.hypot(current.x - old.x, current.y - old.y) > 0.025;
       const facing: Direction =
-        Math.abs(dx) > Math.abs(dy)
-          ? dx > 0
-            ? "right"
-            : "left"
-          : dy > 0
-            ? "down"
-            : dy < 0
-              ? "up"
-              : motionRef.current.direction;
+        poseRef.current !== "standing"
+          ? "up"
+          : Math.abs(dx) > Math.abs(dy)
+            ? dx > 0
+              ? "right"
+              : "left"
+            : dy > 0
+              ? "down"
+              : dy < 0
+                ? "up"
+                : motionRef.current.direction;
       updateMotion(isMoving, facing);
       actorRef.current?.setAttribute(
         "transform",
@@ -349,14 +484,51 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
         nearRef.current = nearby;
         setNear(nearby);
       }
-      if (!path.current.length && queued.current && !activeRef.current) {
+      if (
+        !path.current.length &&
+        queued.current &&
+        !activeRef.current &&
+        poseRef.current === "standing"
+      ) {
         const id = queued.current;
         queued.current = null;
-        openStation(id);
+        if (id === "projects") {
+          if (
+            Math.hypot(current.x - CHAIR_POINT.x, current.y - CHAIR_POINT.y) <
+            0.2
+          )
+            beginSeat();
+        } else openStation(id);
+      }
+      const chairDistance = Math.hypot(
+        current.x - CHAIR_POINT.x,
+        current.y - CHAIR_POINT.y,
+      );
+      if (poseRef.current === "standing" && chairDistance > 42)
+        seatArmed.current = true;
+      // Capture nearby manual explorers, then finish a collision-safe approach
+      // to the exact chair point before the purely visual sitting animation.
+      if (
+        poseRef.current === "standing" &&
+        seatArmed.current &&
+        chairDistance < 24 &&
+        !approachingChair.current &&
+        !activeRef.current &&
+        (!queued.current || queued.current === "projects")
+      ) {
+        for (const source of movementInputs.current.keys())
+          suppressedInputs.current.add(source);
+        movementInputs.current.clear();
+        approachingChair.current = true;
+        path.current = findPath(current, CHAIR_POINT);
+        queued.current = "projects";
+        setTravelTo("projects");
+        setDestination(CHAIR_POINT);
+        if (!path.current.length && chairDistance < 0.2) beginSeat();
       }
       const cam = camera.current;
       cam.targetX = Math.max(
-        50,
+        -170,
         Math.min(870 - cam.width, current.x - cam.width / 2),
       );
       cam.x +=
@@ -372,10 +544,10 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
       const { width, height } = entry.contentRect;
       const mobile = width < 700;
       camera.current.width = mobile
-        ? Math.max(380, Math.min(820, (width / Math.max(height, 1)) * 520))
-        : 820;
+        ? Math.max(380, Math.min(1040, (width / Math.max(height, 1)) * 520))
+        : 1040;
       camera.current.x = Math.max(
-        50,
+        -170,
         Math.min(
           870 - camera.current.width,
           position.current.x - camera.current.width / 2,
@@ -389,7 +561,7 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
       cancelAnimationFrame(frame);
       observer.disconnect();
     };
-  }, [openStation]);
+  }, [openStation, beginSeat, beginExit, changePose]);
 
   function floorClick(event: ReactPointerEvent<SVGSVGElement>) {
     if (
@@ -415,7 +587,14 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
     event.currentTarget.setPointerCapture(event.pointerId);
     beginManualMove("pointer:" + event.pointerId, direction);
   }
+  function releaseMovement(source: string) {
+    movementInputs.current.delete(source);
+    suppressedInputs.current.delete(source);
+  }
   const nearest = STATIONS.find((s) => s.id === near);
+  const canInteract =
+    pose === "seated" ||
+    (pose === "standing" && Boolean(near) && near !== "projects");
 
   return (
     <div className={"pixel-room-page " + (!ambient ? "pr-ambient-off" : "")}>
@@ -452,14 +631,6 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
           >
             ?
           </button>
-          <button
-            className="pr-hud-icon pr-exit"
-            onClick={onExit}
-            aria-label="Return to other portfolio versions"
-            title="Other versions"
-          >
-            ↗
-          </button>
         </div>
       </header>
       <main className="pr-world">
@@ -468,17 +639,20 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
           ref={sceneRef}
           tabIndex={0}
           role="region"
-          aria-label="Playable workshop. Move with W A S D or arrow keys. Press E to interact. Click an object to walk to it."
+          aria-label="Playable workshop. Move with W A S D or arrow keys. Click an object to walk to it. At the computer, take a seat, then press E to explore projects."
           aria-describedby="pr-controls"
         >
           <svg
             ref={svgRef}
-            viewBox="50 70 820 520"
+            viewBox="-170 70 1040 520"
             className="pr-world-svg"
             onPointerDown={floorClick}
             aria-label="Pixel art room with a computer, bookshelf, noticeboard and mailbox"
           >
-            <Artwork />
+            <Artwork
+              activeTopic={active ?? travelTo ?? near}
+              ambientEnabled={ambient}
+            />
             {destination && (
               <g
                 className="pr-destination"
@@ -518,6 +692,15 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
                 }}
               >
                 <rect className="pr-object-hit" {...s.hit} rx="0" />
+                {s.id === "projects" && (
+                  <rect
+                    className="pr-object-hit pr-chair-hit"
+                    x="220"
+                    y="360"
+                    width="70"
+                    height="105"
+                  />
+                )}
                 <g
                   className="pr-station-label"
                   transform={"translate(" + s.label.x + " " + s.label.y + ")"}
@@ -554,6 +737,7 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
               ref={actorRef}
               transform={"translate(" + START.x + " " + START.y + ")"}
               className="pr-player"
+              data-pose={pose}
               aria-hidden="true"
             >
               <CharacterSprite
@@ -561,13 +745,18 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
                 y={0}
                 direction={direction}
                 moving={moving}
+                pose={pose}
               />
               <g
                 className={
                   "pr-player-prompt " +
-                  (near && !moving ? "pr-player-prompt-visible" : "")
+                  (canInteract && !moving && !active
+                    ? "pr-player-prompt-visible"
+                    : "")
                 }
-                transform="translate(0 -82)"
+                transform={
+                  pose === "seated" ? "translate(0 -172)" : "translate(0 -82)"
+                }
               >
                 <path d="M-10-10h20v20H4l-4 5-4-5h-6Z" />
                 <text x="0" y="4" textAnchor="middle">
@@ -575,6 +764,7 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
                 </text>
               </g>
             </g>
+            {pose !== "standing" && <ChairForeground />}
           </svg>
         </div>
         <div className="pr-room-caption" aria-hidden="true">
@@ -588,14 +778,12 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
                 className={"pr-direction pr-direction-" + dir}
                 aria-label={"Move " + dir}
                 onPointerDown={(e) => pressDirection(e, dir)}
-                onPointerUp={(e) =>
-                  movementInputs.current.delete("pointer:" + e.pointerId)
-                }
+                onPointerUp={(e) => releaseMovement("pointer:" + e.pointerId)}
                 onPointerCancel={(e) =>
-                  movementInputs.current.delete("pointer:" + e.pointerId)
+                  releaseMovement("pointer:" + e.pointerId)
                 }
                 onLostPointerCapture={(e) =>
-                  movementInputs.current.delete("pointer:" + e.pointerId)
+                  releaseMovement("pointer:" + e.pointerId)
                 }
                 onKeyDown={(e) => {
                   if (e.key === " " || e.key === "Enter") {
@@ -609,7 +797,7 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
                 onKeyUp={(e) => {
                   if (e.key === " " || e.key === "Enter") {
                     e.preventDefault();
-                    movementInputs.current.delete(
+                    releaseMovement(
                       "dpad-key:" + (e.code || e.key.toLowerCase()),
                     );
                   }
@@ -622,7 +810,7 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
           <button
             className="pr-touch-action"
             onClick={interact}
-            disabled={!near}
+            disabled={!canInteract}
             aria-label={
               nearest ? nearest.title : "Move closer to an object to interact"
             }
@@ -638,20 +826,38 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
           </span>
           <div>
             <span>
-              {travelTo
-                ? "Walking to " +
-                  STATIONS.find((s) => s.id === travelTo)!.name.toLowerCase()
-                : nearest
-                  ? nearest.title
-                  : "Welcome, explorer."}
+              {pose === "seating"
+                ? "Taking a seat…"
+                : pose === "seated"
+                  ? "Computer ready. Explore projects."
+                  : pose === "exiting"
+                    ? "Standing up…"
+                    : travelTo
+                      ? "Walking to " +
+                        STATIONS.find(
+                          (s) => s.id === travelTo,
+                        )!.name.toLowerCase()
+                      : nearest
+                        ? near === "projects"
+                          ? "Take a seat at the computer."
+                          : nearest.title
+                        : "Welcome, explorer."}
             </span>
             <small>
-              {nearest
-                ? "Press E or click the object"
-                : "Click the floor to walk. Find something interesting."}
+              {pose === "seating"
+                ? "A little stretch. Then press E to begin."
+                : pose === "seated"
+                  ? "Press E to open projects. Move to stand up."
+                  : pose === "exiting"
+                    ? "Your next move will begin in a moment."
+                    : near === "projects"
+                      ? "Approach the chair, click it, or press E to sit."
+                      : nearest
+                        ? "Press E or click the object"
+                        : "Click the floor to walk. Find something interesting."}
             </small>
           </div>
-          {nearest && (
+          {canInteract && nearest && (
             <button
               onClick={interact}
               className="pr-interact-key"
@@ -707,9 +913,21 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
               </button>
               <button
                 className="pr-open-direct"
-                onClick={() => openStation(s.id)}
-                aria-label={"Open " + s.id + " immediately"}
-                title="Open without walking"
+                onClick={() =>
+                  s.id === "projects"
+                    ? walkTo(CHAIR_POINT, "projects")
+                    : openStation(s.id)
+                }
+                aria-label={
+                  s.id === "projects"
+                    ? "Take a seat at the computer"
+                    : "Open " + s.id + " immediately"
+                }
+                title={
+                  s.id === "projects"
+                    ? "Take a seat, then press E"
+                    : "Open without walking"
+                }
               >
                 ↗
               </button>
@@ -745,12 +963,17 @@ export default function PixelLab({ onExit }: { onExit: () => void }) {
               <dd>Walk to a spot or explore an object</dd>
             </div>
             <div>
+              <dt>The computer</dt>
+              <dd>Take a seat, then press E for projects. Move to stand up.</dd>
+            </div>
+            <div>
               <dt>Escape</dt>
               <dd>Return to the room</dd>
             </div>
           </dl>
           <p className="pr-help-note">
-            Prefer to skip the walking? Use Explore and the ↗ buttons.
+            Explore offers direct access to the bookshelf, journey and mailbox.
+            The computer starts with a seat.
           </p>
           <button
             className="pr-ambient-button"

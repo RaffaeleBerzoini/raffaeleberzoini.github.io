@@ -1,6 +1,98 @@
 .pr-character {
   pointer-events: none;
 }
+.pr-character:not([data-pose="standing"]) .pr-character-shadow {
+  opacity: 0;
+}
+.pr-character-leg {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+.pr-character[data-pose="seated"] .pr-character-upper {
+  transform: translateY(-90px);
+}
+.pr-character[data-pose="seated"] .pr-character-leg {
+  transform: translateY(-41px) scaleY(4.5);
+}
+.pr-character[data-pose="seated"] .pr-character-foot {
+  transform: translateY(-41px);
+}
+.pr-character[data-pose="seating"] .pr-character-upper {
+  animation: pr-robot-sit-upper 1.1s ease-in-out both;
+}
+.pr-character[data-pose="seating"] .pr-character-leg {
+  animation: pr-robot-sit-leg 1.1s ease-in-out both;
+}
+.pr-character[data-pose="seating"] .pr-character-foot {
+  animation: pr-robot-sit-foot 1.1s ease-in-out both;
+}
+.pr-character[data-pose="exiting"] .pr-character-upper {
+  animation: pr-robot-exit-upper 0.8s ease-in-out both;
+}
+.pr-character[data-pose="exiting"] .pr-character-leg {
+  animation: pr-robot-exit-leg 0.8s ease-in-out both;
+}
+.pr-character[data-pose="exiting"] .pr-character-foot {
+  animation: pr-robot-exit-foot 0.8s ease-in-out both;
+}
+@keyframes pr-robot-sit-upper {
+  0% {
+    transform: translateY(0);
+  }
+  62%,
+  100% {
+    transform: translateY(-90px);
+  }
+}
+@keyframes pr-robot-sit-leg {
+  0% {
+    transform: translateY(0) scaleY(1);
+  }
+  62% {
+    transform: translateY(0) scaleY(7.6);
+  }
+  100% {
+    transform: translateY(-41px) scaleY(4.5);
+  }
+}
+@keyframes pr-robot-sit-foot {
+  0%,
+  62% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-41px);
+  }
+}
+@keyframes pr-robot-exit-upper {
+  0%,
+  35% {
+    transform: translateY(-90px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+@keyframes pr-robot-exit-leg {
+  0% {
+    transform: translateY(-41px) scaleY(4.5);
+  }
+  35% {
+    transform: translateY(0) scaleY(7.6);
+  }
+  100% {
+    transform: translateY(0) scaleY(1);
+  }
+}
+@keyframes pr-robot-exit-foot {
+  0% {
+    transform: translateY(-41px);
+  }
+  35%,
+  100% {
+    transform: translateY(0);
+  }
+}
 .pr-character-moving .pr-character-step-front {
   animation: pr-robot-step 0.28s steps(2, end) infinite;
 }
@@ -47,5 +139,14 @@
 @media (prefers-reduced-motion: reduce) {
   .pr-character * {
     animation: none !important;
+  }
+  .pr-character[data-pose="seating"] .pr-character-upper {
+    transform: translateY(-90px);
+  }
+  .pr-character[data-pose="seating"] .pr-character-leg {
+    transform: translateY(-41px) scaleY(4.5);
+  }
+  .pr-character[data-pose="seating"] .pr-character-foot {
+    transform: translateY(-41px);
   }
 }

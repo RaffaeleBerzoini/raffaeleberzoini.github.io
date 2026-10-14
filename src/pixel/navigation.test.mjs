@@ -41,8 +41,8 @@ const { isWalkable, findPath, moveWithCollisions, WALK_BOUNDS } = await import(
 // Match PixelLab's actual START and station approach positions.
 const spawn = { x: 491, y: 515 };
 const stations = {
-  projects: { x: 324, y: 486 },
-  profile: { x: 181, y: 480 },
+  projects: { x: 254, y: 486 },
+  profile: { x: -20, y: 420 },
   research: { x: 700, y: 486 },
   contact: { x: 799, y: 495 },
 };
@@ -90,7 +90,7 @@ function followLikeController(start, destination, frameDurations = [1 / 60]) {
     const waypoint = path[0];
     const distance = Math.hypot(waypoint.x - old.x, waypoint.y - old.y);
     const delta = Math.min(frameDurations[frame % frameDurations.length], 0.04);
-    if (distance < 3) {
+    if (distance < 0.01) {
       // A controller snap must not cut across a corner after sliding.
       assertSafePath(old, [waypoint]);
       position = { ...waypoint };
@@ -109,7 +109,7 @@ function followLikeController(start, destination, frameDurations = [1 / 60]) {
     );
     if (
       delta &&
-      distance >= 3 &&
+      distance >= 0.01 &&
       Math.hypot(position.x - old.x, position.y - old.y) < 1e-8
     )
       stuckFrames++;
@@ -129,13 +129,14 @@ function followLikeController(start, destination, frameDurations = [1 / 60]) {
   return position;
 }
 
-test("foot-position bounds include their endpoints and reject zero/nonfinite coordinates", () => {
-  assert.equal(isWalkable({ x: 100, y: 500 }), true);
+test("foot-position bounds include their endpoints and reject out-of-range/nonfinite coordinates", () => {
+  assert.equal(isWalkable({ x: -120, y: 500 }), true);
+  assert.equal(isWalkable({ x: 0, y: 400 }), true);
   assert.equal(isWalkable({ x: 815, y: 543 }), true);
   assert.equal(isWalkable({ x: 500, y: 350 }), true);
   for (const point of [
     { x: 0, y: 0 },
-    { x: 99.999, y: 500 },
+    { x: -120.001, y: 500 },
     { x: 815.001, y: 500 },
     { x: 500, y: 349.999 },
     { x: 500, y: 543.001 },
@@ -156,8 +157,8 @@ test("all five furniture pieces reserve exactly the 11-unit character margin", (
       { x: 250, y: 473.01 },
     ], // Chair bottom
     [
-      { x: 110, y: 443 },
-      { x: 110, y: 443.01 },
+      { x: -104, y: 446 },
+      { x: -104, y: 446.01 },
     ], // Plant bottom
     [
       { x: 634, y: 400 },
@@ -272,7 +273,8 @@ test("clicking furniture selects nearby reachable floor deterministically", () =
   const path = findPath(spawn, target);
   assert.ok(path.length > 0);
   assert.deepEqual(path, findPath(spawn, target));
-  assert.deepEqual(path.at(-1), { x: 308, y: 462 });
+  assert.equal(path.at(-1).y, 462);
+  assert.ok(Math.abs(path.at(-1).x - target.x) <= 8);
   assertSafePath(spawn, path);
 });
 

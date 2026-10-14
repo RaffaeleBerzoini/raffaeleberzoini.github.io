@@ -1242,9 +1242,6 @@
   font-size: 17px;
   line-height: 1;
 }
-.edition-icon-pixel {
-  font-size: 20px;
-}
 .edition-loading {
   min-height: 100svh;
   display: grid;

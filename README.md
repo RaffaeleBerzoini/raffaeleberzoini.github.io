@@ -1,6 +1,6 @@
-# Raffaele Berzoini — portfolio
+# Raffaele Berzoini — Pixel Lab
 
-Three complete local portfolio editions built with React, TypeScript and Vite.
+An independent, playable pixel-art portfolio built with React, TypeScript and Vite.
 
 ## Start locally
 
@@ -9,23 +9,24 @@ npm.cmd install
 npm.cmd run dev
 ```
 
-Open the Local URL printed by Vite (normally `http://127.0.0.1:5173`).
-
-- **Signal** — `/?version=signal`: an interactive particle sculpture, original project illustrations, filterable projects, expandable research, citation copying, dark mode and search (`Ctrl+K` / `⌘K`).
-- **Atlas** — `/?version=atlas`: an interactive map connecting projects, research and engineering.
-- **Pixel Lab** — `/?version=pixel`: a playable pixel-art workshop. Walk a little robot around the room and explore projects inside a CRT computer, publications in an open book, your journey on a corkboard, and contacts in a letter.
-
-Use the floating bottom selector to move between versions. Pixel Lab fills the screen and has a top-right exit arrow to return to the selector. Browser back/forward and direct version URLs work. The portfolio is written in English for an international technical audience.
+Open `http://127.0.0.1:5173/`. This site is exclusively Pixel Lab: it has no edition selector, links to the alternative designs, or dependency on their UI code. Old `?version=` parameters do not change the site. The portfolio is written in English for an international technical audience.
 
 ## Pixel Lab controls
 
 - Move with **WASD / arrow keys**, click the floor, or use the touch direction pad.
-- Click an object to walk to it and open it automatically. The robot routes around furniture.
+- Approach or click the **chair/computer**. The robot extends its legs and sits facing the screen. Press **E / Space** once seated to browse projects.
+- Move or choose another destination to stand up and continue exploring.
+- Click the **Journey noticeboard**, **bookshelf**, or **mailbox** to walk there and open its contents. The robot routes around furniture.
 - Press **E / Space** near an object to interact; **Esc** returns to the room.
-- Use **Explore** to choose a destination, or its small arrow buttons to open content immediately.
+- Inside projects, publications and Journey, use **Right / Up / W / D** for the next item and **Left / Down / A / S** for the previous item.
+- Use **Explore** to choose a destination. Its small arrow buttons open the book, journey and contacts immediately; the computer starts with taking a seat.
 - The **?** button explains controls and lets you pause room ambience. Reduced-motion preferences are respected.
 
 On narrow screens, the camera follows the character. Each object has its own pixel-art reading interface and keyboard-accessible controls. No side panel is needed.
+
+The lower two Journey notes occasionally fall like leaves beside a curled gray tabby's bed (one fall about every 78 seconds). After a sleepy pause, the cat collects the note, walks to the board, turns its back and stands on its hind legs to reattach it before returning to bed. A second gray tabby lies on the bookshelf, looking toward the viewer with its head tilted and its tail hanging over the books. The terminal responds to explored topics, books move subtly, and a robotic courier exchanges letters. The window remains decorative; no minigame has been implemented.
+
+Both cats have larger, softly rounded faces and smiling sleeping eyes. The helper's four-beat walk follows distance travelled, with articulated legs, planted paws and a small body/tail sway; it stops stepping when stationary.
 
 ## Build
 
@@ -37,25 +38,38 @@ npm.cmd run preview
 
 The production build goes to `dist/`. No hosting or cloud deployment is configured.
 
+## Alternative designs
+
+Signal and Atlas are preserved in the separate `sites/classic/` project, with their own entry point, styles, copied content, Vite configuration and build output. The projects share installed dependencies only; neither website imports the other's UI.
+
+```powershell
+npm.cmd run dev:classic
+npm.cmd run build:classic
+npm.cmd run preview:classic
+```
+
+The classic development server uses `http://127.0.0.1:5174/`; its production files go to `sites/classic/dist/`. Its selector switches only between Signal and Atlas. Pixel Lab's content and style changes do not update that separate copy.
+
 ## Content and sources
 
-Edit `src/data.ts` to update the profile, projects, publications and experience shared by all three versions. The source inventory, uncertainties and publication dates are in `docs/profile-sources.md`. Design references and the adaptation of frontend-design guidance are in `docs/design-research.md`.
+Edit `src/data.ts` to update Pixel Lab's profile, projects, publications and experience. The source inventory, uncertainties and publication dates are in `docs/profile-sources.md`. Initial design references and the adaptation of frontend-design guidance are in `docs/design-research.md`.
 
 The app uses verified public professional information; employment start dates, personal email, degree grades and unsupported project metrics are deliberately not invented. The project illustrations and particle field are original visual interpretations, not screenshots of products or actual medical data.
 
-All fonts are served locally. No analytics, tracking, backend or credentials are used. Content is bundled so it remains available offline once loaded. The only optional content request is **Load GitHub activity**, which reads the public GitHub REST API, has an eight-second timeout and a direct-link fallback for offline/rate-limit failures. External project/publication links require internet access.
+All fonts are served locally. Pixel Lab uses no analytics, tracking, backend, credentials or background API requests. Content is bundled so it remains available offline once loaded. External project/publication links require internet access. The optional **Load GitHub activity** feature belongs only to the separate classic site.
 
 ## Main files
 
-- `src/App.tsx` / `src/styles.css`: Signal, version navigation and global search.
-- `src/Atlas.tsx` / `src/atlas.css`: Research Atlas.
-- `src/PixelLab.tsx` / `src/pixel-lab.css`: Pixel Lab.
+- `src/main.tsx` / `src/base.css`: independent Pixel Lab entry and base styles.
+- `src/PixelLab.tsx` / `src/pixel-lab.css`: movement, interaction, chair state and camera.
 - `src/pixel/`: room artwork, animated character, collision/pathfinding engine, object interfaces, and navigation tests.
-- `src/components/SignalField.tsx`: original Canvas renderer with reduced-motion support, intersection/visibility pause and DPR cap.
-- `src/data.ts`: single content source.
+- `sites/classic/`: separate Signal/Atlas site and source copy.
+- `src/data.ts`: Pixel Lab content source.
 
-Canvas graphics are decorative; substantive information is always in accessible HTML. Motion follows reduced-motion settings, and Signal has an explicit pause control. Layouts support mobile and keyboard navigation.
+Substantive information is available in accessible HTML. Motion follows reduced-motion settings, and the room has an ambient pause control. Layouts support mobile and keyboard navigation.
 
 ## Restore point
 
 Commit `43e28be` (`feat: add initial portfolio editions`) preserves all three initial editions before the playable-room redesign. It also includes `.gitignore` for dependencies, build output, local screenshots, logs, and environment secrets.
+
+Commit `aff7bb4` (`feat: make Pixel Lab a playable workshop`) preserves the approved playable room before separating the sites and adding the new animations.

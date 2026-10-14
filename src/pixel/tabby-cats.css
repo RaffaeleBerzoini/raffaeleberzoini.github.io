@@ -1,0 +1,245 @@
+/* Chubby gray tabbies: artwork changes pose; the scene owns their world path. */
+.pr-tabby-face .pr-tabby-blink-eyes {
+  opacity: 0;
+}
+.pr-tabby-face:not(.pr-tabby-face-sleepy) .pr-tabby-open-eyes {
+  animation: pr-tabby-round-blink 9s steps(1, end) infinite;
+}
+.pr-tabby-face:not(.pr-tabby-face-sleepy) .pr-tabby-blink-eyes {
+  animation: pr-tabby-round-blink-closed 9s steps(1, end) infinite;
+}
+.pr-tabby-face .pr-tabby-face-ear {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: pr-tabby-round-ear 21s steps(2, end) infinite;
+}
+.pr-sleeping-tabby .pr-sleeping-tail {
+  transform-box: fill-box;
+  transform-origin: 20% 3%;
+  animation: pr-tabby-shelf-tail 16s steps(5, end) infinite;
+}
+.pr-sleeping-tabby .pr-sleeping-breath {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: pr-tabby-shelf-breathe 7s steps(3, end) infinite;
+}
+.pr-helper-sleep .pr-helper-curled-body,
+.pr-helper-settle .pr-helper-curled-body {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: pr-tabby-nap-breathe 7s steps(3, end) infinite;
+}
+.pr-helper-sleep .pr-helper-curled-tail {
+  transform-box: fill-box;
+  transform-origin: 90% 10%;
+  animation: pr-tabby-nap-tail 18s steps(2, end) infinite;
+}
+.pr-helper-wake .pr-helper-rest-paws {
+  animation: pr-tabby-wake-stretch 3s steps(8, end) both;
+}
+.pr-helper-wake .pr-helper-rest-head-motion {
+  animation: pr-tabby-wake-head 3s steps(8, end) both;
+}
+.pr-helper-wake .pr-tabby-open-eyes {
+  animation: pr-tabby-wake-eyes 3s steps(1, end) both;
+}
+.pr-helper-wake .pr-tabby-blink-eyes {
+  animation: pr-tabby-wake-lids 3s steps(1, end) both;
+}
+.pr-helper-settle .pr-helper-rest-head-motion {
+  animation: pr-tabby-settle-head 3s steps(8, end) both;
+}
+.pr-helper-settle .pr-helper-curled-body {
+  animation: pr-tabby-settle-body 3s steps(8, end) both;
+}
+.pr-helper-settle .pr-helper-rest-paws {
+  animation: pr-tabby-settle-paws 3s steps(8, end) both;
+}
+.pr-helper-carrying .pr-tabby-open-eyes {
+  animation: none !important;
+}
+.pr-helper-carrying .pr-tabby-blink-eyes {
+  animation: none !important;
+  opacity: 0;
+}
+@keyframes pr-tabby-round-blink {
+  0%,
+  93%,
+  97%,
+  100% {
+    opacity: 1;
+  }
+  94%,
+  96% {
+    opacity: 0;
+  }
+}
+@keyframes pr-tabby-round-blink-closed {
+  0%,
+  93%,
+  97%,
+  100% {
+    opacity: 0;
+  }
+  94%,
+  96% {
+    opacity: 1;
+  }
+}
+@keyframes pr-tabby-round-ear {
+  0%,
+  77%,
+  85%,
+  100% {
+    transform: rotate(0);
+  }
+  80% {
+    transform: rotate(-8deg);
+  }
+  83% {
+    transform: rotate(3deg);
+  }
+}
+@keyframes pr-tabby-shelf-tail {
+  0%,
+  28%,
+  100% {
+    transform: rotate(0);
+  }
+  45% {
+    transform: rotate(3deg);
+  }
+  64% {
+    transform: rotate(-2deg);
+  }
+  80% {
+    transform: rotate(1deg);
+  }
+}
+@keyframes pr-tabby-shelf-breathe {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(1.035);
+  }
+}
+@keyframes pr-tabby-nap-breathe {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(1.04);
+  }
+}
+@keyframes pr-tabby-nap-tail {
+  0%,
+  72%,
+  100% {
+    transform: rotate(0);
+  }
+  80% {
+    transform: rotate(-3deg);
+  }
+  90% {
+    transform: rotate(2deg);
+  }
+}
+@keyframes pr-tabby-wake-stretch {
+  0%,
+  20%,
+  100% {
+    transform: translateX(0);
+  }
+  45%,
+  70% {
+    transform: translateX(-5px);
+  }
+}
+@keyframes pr-tabby-wake-head {
+  0%,
+  20% {
+    transform: translateY(5px) rotate(-3deg);
+  }
+  55% {
+    transform: translateY(1px) rotate(2deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+}
+@keyframes pr-tabby-wake-eyes {
+  0%,
+  23%,
+  46%,
+  55% {
+    opacity: 0;
+  }
+  24%,
+  45%,
+  56%,
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes pr-tabby-wake-lids {
+  0%,
+  23%,
+  46%,
+  55% {
+    opacity: 1;
+  }
+  24%,
+  45%,
+  56%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes pr-tabby-settle-head {
+  0% {
+    transform: translate(4px, -8px) rotate(7deg);
+  }
+  40% {
+    transform: translate(1px, -4px) rotate(2deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0);
+  }
+}
+@keyframes pr-tabby-settle-body {
+  0% {
+    transform: scaleY(1.18) scaleX(0.93);
+  }
+  50% {
+    transform: scaleY(1.06) scaleX(0.98);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes pr-tabby-settle-paws {
+  0% {
+    transform: translateX(-5px);
+  }
+  60% {
+    transform: translateX(-2px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+.pr-ambient-off .pr-sleeping-tabby *,
+.pr-ambient-off .pr-helper-tabby,
+.pr-ambient-off .pr-helper-tabby * {
+  animation: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pr-sleeping-tabby *,
+  .pr-helper-tabby,
+  .pr-helper-tabby * {
+    animation: none !important;
+  }
+}

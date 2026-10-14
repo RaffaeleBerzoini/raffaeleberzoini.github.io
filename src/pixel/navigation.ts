@@ -9,7 +9,7 @@ export type Obstacle = {
 
 /** Bounds apply to the character's foot/centre position in room coordinates. */
 export const WALK_BOUNDS = Object.freeze({
-  minX: 100,
+  minX: -120,
   maxX: 815,
   minY: 350,
   maxY: 543,
@@ -18,7 +18,7 @@ export const PLAYER_RADIUS = 11;
 export const OBSTACLES: readonly Readonly<Obstacle>[] = Object.freeze([
   Object.freeze({ left: 150, right: 425, top: 310, bottom: 445 }), // Desk
   Object.freeze({ left: 220, right: 290, top: 365, bottom: 462 }), // Chair
-  Object.freeze({ left: 95, right: 157, top: 320, bottom: 432 }), // Plant
+  Object.freeze({ left: -133, right: -84, top: 345, bottom: 435 }), // Plant
   Object.freeze({ left: 645, right: 792, top: 210, bottom: 449 }), // Shelf
   Object.freeze({ left: 783, right: 850, top: 336, bottom: 459 }), // Mailbox
 ]);

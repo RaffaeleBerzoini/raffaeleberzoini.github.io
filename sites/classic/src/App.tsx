@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
   ArrowDown,
@@ -20,8 +20,7 @@ import {
 import { links, projects, papers, experience } from "./data";
 import SignalField from "./components/SignalField";
 import Atlas from "./Atlas";
-const PixelLab = lazy(() => import("./PixelLab"));
-type Edition = "signal" | "atlas" | "pixel";
+type Edition = "signal" | "atlas";
 
 function Mark() {
   return (
@@ -534,9 +533,13 @@ function Signal({ onPalette }: { onPalette: () => void }) {
               aria-label={
                 reducedMotion
                   ? "Animation disabled by reduced motion preference"
-                  : paused ? "Play particle animation" : "Pause particle animation"
+                  : paused
+                    ? "Play particle animation"
+                    : "Pause particle animation"
               }
-              title={reducedMotion ? "Your system prefers reduced motion" : undefined}
+              title={
+                reducedMotion ? "Your system prefers reduced motion" : undefined
+              }
               disabled={reducedMotion}
               aria-pressed={paused}
               onClick={() => setPaused(!paused)}
@@ -758,7 +761,7 @@ function SearchDialog({
       <div className="search-results">
         {!query && (
           <div className="search-editions">
-            {(["signal", "atlas", "pixel"] as const).map((e) => (
+            {(["signal", "atlas"] as const).map((e) => (
               <button
                 key={e}
                 onClick={() => {
@@ -766,7 +769,7 @@ function SearchDialog({
                   onClose();
                 }}
               >
-                Open {e === "pixel" ? "Pixel Lab" : e}
+                Open {e}
                 <ArrowRight size={15} />
               </button>
             ))}
@@ -802,7 +805,7 @@ function SearchDialog({
 export default function App() {
   const readEdition = (): Edition => {
     const e = new URLSearchParams(location.search).get("version");
-    return e === "atlas" || e === "pixel" ? e : "signal";
+    return e === "atlas" ? e : "signal";
   };
   const [edition, setEdition] = useState<Edition>(readEdition);
   const [search, setSearch] = useState(false);
@@ -830,42 +833,32 @@ export default function App() {
     };
   }, []);
   useEffect(() => {
-    document.title = `Raffaele Berzoini — ${edition === "signal" ? "Engineering intelligence" : edition === "atlas" ? "Research Atlas" : "Pixel Lab"}`;
+    document.title = `Raffaele Berzoini — ${edition === "signal" ? "Engineering intelligence" : "Research Atlas"}`;
   }, [edition]);
   return (
     <>
-      <Suspense
-        fallback={<div className="edition-loading">Opening the lab…</div>}
-      >
-        {edition === "signal" ? (
-          <Signal onPalette={() => setSearch(true)} />
-        ) : edition === "atlas" ? (
-          <Atlas onExit={() => changeEdition("signal")} />
-        ) : (
-          <PixelLab onExit={() => changeEdition("signal")} />
-        )}
-      </Suspense>
-      {edition !== "pixel" && <nav className="edition-dock" aria-label="Choose portfolio design">
+      {edition === "signal" ? (
+        <Signal onPalette={() => setSearch(true)} />
+      ) : (
+        <Atlas onExit={() => changeEdition("signal")} />
+      )}
+      <nav className="edition-dock" aria-label="Choose portfolio design">
         <span className="edition-label">Explore a different perspective</span>
         <div>
-          {(["signal", "atlas", "pixel"] as const).map((e, i) => (
+          {(["signal", "atlas"] as const).map((e, i) => (
             <button
               key={e}
               aria-pressed={edition === e}
               onClick={() => changeEdition(e)}
             >
               <span className={"edition-icon edition-icon-" + e}>
-                {i === 0 ? "◉" : i === 1 ? "✳" : "▦"}
+                {i === 0 ? "◉" : "✳"}
               </span>
-              {e === "signal"
-                ? "Signal"
-                : e === "atlas"
-                  ? "Atlas"
-                  : "Pixel Lab"}
+              {e === "signal" ? "Signal" : "Atlas"}
             </button>
           ))}
         </div>
-      </nav>}
+      </nav>
       {search && (
         <SearchDialog
           onClose={() => setSearch(false)}

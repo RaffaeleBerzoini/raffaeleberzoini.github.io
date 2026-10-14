@@ -1,0 +1,11 @@
+{
+  "name": "raffaele-berzoini-classic-portfolio",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --config vite.config.ts",
+    "build": "tsc --project tsconfig.json && vite build --config vite.config.ts",
+    "preview": "vite preview --config vite.config.ts"
+  }
+}

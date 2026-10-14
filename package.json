@@ -5,9 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
+    "dev:classic": "vite --config sites/classic/vite.config.ts",
     "build": "tsc -b && vite build",
-    "test": "node --test src/pixel/navigation.test.mjs",
-    "preview": "vite preview --host 127.0.0.1"
+    "build:classic": "tsc --project sites/classic/tsconfig.json && vite build --config sites/classic/vite.config.ts",
+    "test": "node --test src/pixel/navigation.test.mjs src/pixel/postit-scene.test.mjs src/pixel/cat-gait.test.mjs",
+    "preview": "vite preview --host 127.0.0.1",
+    "preview:classic": "vite preview --config sites/classic/vite.config.ts"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.2.8",

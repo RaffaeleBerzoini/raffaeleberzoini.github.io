@@ -1,10 +1,84 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type ReactNode,
+} from "react";
 import { experience, links, papers, profile, projects } from "../data";
 import "./object-experience.css";
 
 export type RoomSection = "projects" | "research" | "profile" | "contact";
 
 type ObjectExperienceProps = { section: RoomSection; onClose: () => void };
+
+/** One keypress turns one page; focus and native form controls keep their behavior. */
+function usePagedSelection(count: number) {
+  const [selected, setSelected] = useState(0);
+
+  function onKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    if (
+      count < 2 ||
+      event.defaultPrevented ||
+      event.altKey ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.shiftKey ||
+      event.nativeEvent.isComposing
+    )
+      return;
+
+    const target = event.target;
+    if (
+      target instanceof Element &&
+      target.closest(
+        'input, textarea, select, [contenteditable]:not([contenteditable="false"]), ' +
+          '[role="textbox"], [role="combobox"], [role="slider"], [role="spinbutton"]',
+      )
+    )
+      return;
+
+    const key = event.key.toLowerCase();
+    const step = ["arrowright", "arrowup", "w", "d"].includes(key)
+      ? 1
+      : ["arrowleft", "arrowdown", "a", "s"].includes(key)
+        ? -1
+        : 0;
+    if (!step) return;
+
+    // Consume repeat scrolling without racing through every page. Let the room's
+    // window listener still observe the key so its held-input suppression works.
+    event.preventDefault();
+    if (event.repeat) return;
+    setSelected((current) => (current + step + count) % count);
+    const container = event.currentTarget;
+    // Changing a keyed page can remove a focused source link. Keep subsequent
+    // key presses in this touchpoint without stealing focus from stable controls.
+    requestAnimationFrame(() => {
+      if (!container.isConnected || container.contains(document.activeElement))
+        return;
+      const dialog = container.closest("dialog");
+      if (
+        dialog?.open &&
+        (document.activeElement === document.body ||
+          document.activeElement === dialog)
+      ) {
+        container.focus({ preventScroll: true });
+      }
+    });
+  }
+
+  return { selected, setSelected, onKeyDown };
+}
+
+function KeyboardHint() {
+  return (
+    <span aria-label="Next: Arrow Up, Arrow Right, W or D. Previous: Arrow Down, Arrow Left, A or S.">
+      ↑ → W D: next
+      <br />↓ ← A S: previous
+    </span>
+  );
+}
 
 function PixelIcon({
   kind,
@@ -146,6 +220,7 @@ function Stepper({
       <button
         onClick={() => onChange((index - 1 + count) % count)}
         aria-label={`Previous ${noun}`}
+        aria-keyshortcuts="ArrowLeft ArrowDown A S"
       >
         <span aria-hidden="true">←</span> Prev
       </button>
@@ -157,6 +232,7 @@ function Stepper({
       <button
         onClick={() => onChange((index + 1) % count)}
         aria-label={`Next ${noun}`}
+        aria-keyshortcuts="ArrowRight ArrowUp W D"
       >
         Next <span aria-hidden="true">→</span>
       </button>
@@ -165,7 +241,9 @@ function Stepper({
 }
 
 function ProjectComputer({ onClose }: { onClose: () => void }) {
-  const [selected, setSelected] = useState(0);
+  const { selected, setSelected, onKeyDown } = usePagedSelection(
+    projects.length,
+  );
   const project = projects[selected];
   const projectIcon =
     project.visual === "musemind"
@@ -177,7 +255,7 @@ function ProjectComputer({ onClose }: { onClose: () => void }) {
           : "computer";
 
   return (
-    <div className="ox-computer">
+    <div className="ox-computer" onKeyDown={onKeyDown} tabIndex={-1}>
       <div className="ox-crt-case">
         <div className="ox-computer-brand">
           <span>
@@ -247,7 +325,7 @@ function ProjectComputer({ onClose }: { onClose: () => void }) {
             </div>
             <footer className="ox-terminal-footer">
               <span className="ox-terminal-hint">
-                Select a file to explore.
+                <KeyboardHint />
               </span>
               <Stepper
                 index={selected}
@@ -271,7 +349,7 @@ function ProjectComputer({ onClose }: { onClose: () => void }) {
 }
 
 function ResearchBook({ onClose }: { onClose: () => void }) {
-  const [selected, setSelected] = useState(0);
+  const { selected, setSelected, onKeyDown } = usePagedSelection(papers.length);
   const paper = papers[selected];
   const shortTitles: Record<string, string> = {
     memory: "Memory",
@@ -281,7 +359,7 @@ function ResearchBook({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div className="ox-research-object">
+    <div className="ox-research-object" onKeyDown={onKeyDown} tabIndex={-1}>
       <div className="ox-book-top">
         <h2 id="ox-dialog-title">
           <PixelIcon kind="book" /> The research shelf
@@ -349,7 +427,9 @@ function ResearchBook({ onClose }: { onClose: () => void }) {
         </div>
         <div className="ox-book-binding" aria-hidden="true" />
         <footer className="ox-book-footer">
-          <span>A few questions worth following.</span>
+          <span>
+            <KeyboardHint />
+          </span>
           <Stepper
             index={selected}
             count={papers.length}
@@ -364,11 +444,13 @@ function ResearchBook({ onClose }: { onClose: () => void }) {
 }
 
 function JourneyBoard({ onClose }: { onClose: () => void }) {
-  const [selected, setSelected] = useState(0);
+  const { selected, setSelected, onKeyDown } = usePagedSelection(
+    experience.length,
+  );
   const item = experience[selected];
 
   return (
-    <div className="ox-corkboard">
+    <div className="ox-corkboard" onKeyDown={onKeyDown} tabIndex={-1}>
       <header className="ox-board-header">
         <div className="ox-board-title-tape">
           <h2 id="ox-dialog-title">Connecting the dots.</h2>
@@ -422,7 +504,11 @@ function JourneyBoard({ onClose }: { onClose: () => void }) {
         </article>
       </div>
       <footer className="ox-board-footer">
-        <p>{profile.education}</p>
+        <p>
+          {profile.education}
+          <br />
+          <KeyboardHint />
+        </p>
         <Stepper
           index={selected}
           count={experience.length}

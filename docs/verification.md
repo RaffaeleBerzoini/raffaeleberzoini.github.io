@@ -2,13 +2,17 @@
 
 Initial editions checked on 13 October 2026. Playable Pixel Lab checked on 14 October 2026.
 
-## Build
+## Initial editions — historical checks
+
+The following build and browser checks describe the original combined site. That state, including the first playable workshop, is preserved in commit `aff7bb4`.
+
+### Build
 
 - `npm.cmd run build`: passed (strict TypeScript check and Vite production build).
 - Installation audit: 0 vulnerabilities reported for the installed dependency tree.
 - Main JavaScript bundle: approximately 85.5 KB gzip. Pixel Lab loads as a separate chunk.
 
-## Browser checks
+### Browser checks
 
 Checked in the Codex Chromium browser at desktop 1440 × 1000 and mobile 390 × 844. The default narrow app panel was also inspected.
 
@@ -41,6 +45,57 @@ Checked in the Codex Chromium browser at desktop 1440 × 1000 and mobile 390 × 
 - No browser console errors or warnings were observed during these checks.
 
 Phone testing used a browser viewport and simulated input, not a physical phone. Reduced-motion CSS covers room ambience, character stepping, object arrival, and camera interpolation; Pixel Lab media emulation was not repeated in this pass.
+
+## Independent living workshop — 14 October 2026
+
+- Committed the previously approved playable workshop as `aff7bb4` before making this pass.
+- Pixel Lab now starts directly at `http://127.0.0.1:5173/`. It has no edition switcher or links to the other designs. Signal and Atlas have their own entry point, sources, data copy, and build in `sites/classic/`.
+- `npm.cmd run build`: passed after final formatting. Pixel JavaScript is approximately 90.0 KB gzip, with no Signal/Atlas imports.
+- `npm.cmd run build:classic`: passed. Classic JavaScript is approximately 84.8 KB gzip. Its development server and both shared font files returned HTTP 200 on port 5174 after restricting Vite's additional filesystem access to the shared `node_modules` directory. Navigation in the in-app browser timed out, so a new end-to-end browser pass on the separated classic site was not completed.
+- `npm.cmd test`: 19 navigation tests passed with the wider room, revised plant obstacle, and exact chair approach position. Includes all station pairs and movement stepping at 144/60/25 fps.
+- Desktop 1440 × 1000 and mobile 390 × 844 were visually inspected. The mobile document has no horizontal or vertical overflow; its camera follows the character into the Journey nook and the bookshelf/mailbox area.
+- Clicking the computer routes to the chair, extends the robot's legs, and seats it facing the screen. Projects remain closed until E (or another click). E opens the project terminal, Next selects NERONE, and closing returns to the seated pose.
+- Held keyboard input approaching the chair also triggers seating. Moving from the chair plays the stand-up transition before walking. Held touch movement and a click on another station also leave the chair successfully.
+- Walking to Journey, publications, and contacts opens the correct object view. The robot faces each object. The terminal changes its references to match the current destination/topic.
+- The widened Journey board, arriving/departing post-its, two striped kittens, moving shelf objects, and robot courier were visually checked. Labels leave the cats and courier visible on mobile.
+- Emulated `prefers-reduced-motion: reduce`: post-its, kitten tails, and courier report no animation; seating settles immediately at the destination. Media emulation was reset after checking.
+- No console errors or warnings were observed in the final browser pass.
+- The window remains decorative; no game was implemented in this pass.
+
+Phone checks use browser emulation rather than physical hardware. New preview: `qa/pixel-workshop-living-room.png`.
+
+## Keyboard paging and tabby helpers — 14 October 2026
+
+- Projects, publications and Journey now accept Right/Up/W/D for next and Left/Down/A/S for previous. Browser checks exercised all eight keys in publications, W/S in projects, and D/A in Journey. Selection wraps correctly and the robot remains stationary inside the dialog. The mobile project Next/Prev buttons were also checked.
+- Keyboard handlers ignore modified shortcuts, editable inputs and composition; repeated keydowns do not race through pages. Contacts retain normal scrolling.
+- One darker gray tabby lies on the bookshelf, its tail hanging in front of the books. A second gray tabby waits beside Journey and retrieves fallen notes. The bookshelf label was moved above the cat so it does not cover the tail.
+- All four notes participate in a shuffled cycle without repeats at the bag boundary. One note falls with a swaying leaf motion, rests on the floor, is picked up at the cat's mouth, travels with the jump, and returns to its exact board position.
+- `npm.cmd run build`: passed. `npm.cmd test`: 27 passed, including 8 new tests for shuffle coverage, phase continuity, ground rest, mouth attachment, restoration, and valid transforms.
+- Desktop 1440 × 1000: observed the fall, floor rest, jump with paper in the mouth, restoration and return. Mobile 390 × 844: the project interface remains usable with the paging change.
+- Reduced-motion emulation and the room ambience pause both restore all notes to the board, return the helper to rest and stop the sleeping tail animation. Preferences were reset after checking. Like the existing ambience controls, resuming starts a fresh scene rather than continuing a half-completed action.
+- No new console errors appeared after the completed modules loaded; the earlier Vite missing-module messages occurred while the new cat artwork file was still being created.
+- Screenshot: `qa/pixel-postit-cat-jump.png`.
+
+## Sleepy cats and grounded note retrieval — 14 October 2026
+
+- Replaced the narrow profile faces with round, front-facing tabby heads, short muzzles, two eyes and distinct pointed ears. The shelf cat's head tilts toward the viewer. The helper curls in a woven bed between trips.
+- Only LEARN and BUILD can fall; the two upper notes stay pinned. The cycle is now 78 seconds, with a six-second leaf-like fall, a five-second ground pause and a three-second sleepy wake-up.
+- The helper walks to the paper, carries it to the board, turns its back, then raises its body and paws while both hind feet stay at floor level. The reach is calculated from the original note position. It lowers itself, walks home and curls up again; the jump was removed.
+- The fern was made smaller and moved left to leave the approach to LEARN clear; its collision rectangle was updated to match.
+- `npm.cmd run build`: passed. `npm.cmd test`: 31 passed, including 12 scene tests covering fixed upper notes, timing, continuous floor movement, mouth attachment, rear-facing transfer, fixed feet, exact reattachment and return to bed.
+- Browser checked at 1440 × 1000 and 390 × 844. The new curled poses, carrying, back-facing approach, raised reattachment and return were inspected. Mobile Journey is reachable and the room has no document overflow. Reduced-motion emulation restores the sleeping helper and stops ambient tail movement; the emulation was reset afterward. Final console check returned no errors or warnings.
+- Screenshots: `qa/pixel-cats-curled.png` and `qa/pixel-sleepy-cat-pin.png`.
+
+## Softer faces and articulated walking — 15 October 2026
+
+- Both tabbies have broader cheeks, larger heads, softer crown markings, smiling closed eyes and round eyes with highlights when awake. The shelf head keeps its tilt toward the viewer; the helper keeps its curled sleeping pose.
+- Replaced the repeating leg translations with a four-beat, distance-driven walk. Knees connect the moving hips to independent paws, and stance strokes follow the actual floor direction, including diagonals. Body and tail motion taper with speed without scaling the planted paws. A frame with no elapsed scene time preserves the last gait.
+- At a change of direction, the new pose takes its direction from its upcoming step, avoiding a one-frame projection onto the previous path.
+- The carried note remains at the helper's mouth. The existing fall frequency, two eligible lower notes, grounded reattachment and return-to-bed sequence are preserved.
+- `npm.cmd run build`: passed. `npm.cmd test`: 37 passed. Six new gait tests cover fixed ground contact, four distinct footfalls, continuous lift-off/landing, bounded paw clearance, backward stepping and finite periodic output.
+- Browser checked at 1440 × 1000 and 390 × 844. Inspected sleeping faces, walking, note transport, the rear view and return to bed. The mobile scene has no horizontal or vertical document overflow. Reduced-motion emulation restores the helper to sleep and stops the shelf tail; normal motion resumes afterward.
+- Screenshots: `qa/pixel-cuddly-cats.png`, `qa/pixel-cat-new-walk.png`, and `qa/pixel-cuddly-cat-mobile.png`.
+- Final browser console check returned no errors or warnings.
 
 ## Boundaries
 
