@@ -2,6 +2,8 @@
 
 An independent, playable pixel-art portfolio built with React, TypeScript and Vite.
 
+Live site: [raffaeleberzoini.github.io](https://raffaeleberzoini.github.io/).
+
 ## Start locally
 
 ```powershell
@@ -47,7 +49,15 @@ npm.cmd test
 npm.cmd run preview
 ```
 
-The production build goes to `dist/`. No hosting or cloud deployment is configured.
+The production build goes to `dist/`.
+
+## Publish
+
+The public repository is [RaffaeleBerzoini/raffaeleberzoini.github.io](https://github.com/RaffaeleBerzoini/raffaeleberzoini.github.io). GitHub Pages uses the GitHub Actions source.
+
+Pushing to `master` runs `.github/workflows/deploy.yml`: install the locked dependencies with Node.js 22, run the tests, build Pixel Lab and publish only `dist/`. A failed test or build prevents deployment. The workflow can also be started manually from the repository's Actions tab.
+
+Vite's default `/` base matches this account-level Pages address. The separate classic designs are kept in source but are not built or published by this workflow.
 
 ## Alternative designs
 

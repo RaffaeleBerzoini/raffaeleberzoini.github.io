@@ -115,6 +115,6 @@ Phone checks use browser emulation and simulated input rather than physical hard
 
 ## Boundaries
 
-Public professional facts and research metadata are documented in `profile-sources.md`. This is a local portfolio; there has been no cloud deployment. External destinations and the optional GitHub API depend on internet access. Browser verification is not an exhaustive audit across every browser, assistive technology or device.
+Public professional facts and research metadata are documented in `profile-sources.md`. The GitHub Pages workflow publishes the Pixel Lab build from `dist/`; the classic editions keep their separate local build. External destinations and the optional classic GitHub API depend on internet access. Browser verification is not an exhaustive audit across every browser, assistive technology or device.
 
 Screenshots are saved in the ignored `qa/` directory.
